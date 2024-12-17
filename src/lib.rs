@@ -1,8 +1,8 @@
 use std::path::Path;
 
-use error::SeedingErrors;
+pub use error::SeedingErrors;
 
-use crate::{
+pub use crate::{
     root::{RootFolder, RootJobs},
     seed::SeedFolder,
 };
@@ -13,6 +13,8 @@ mod export;
 mod param;
 mod root;
 mod seed;
+
+pub use seed::Seed;
 
 pub fn execute<P: AsRef<Path>, Q: AsRef<Path>>(
     target_dir: P,
