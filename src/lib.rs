@@ -1,10 +1,3 @@
-use std::path::Path;
-
-use castep_cell_io::{CellBuilding, ParamBuilding};
-pub use error::SeedingErrors;
-
-pub use crate::root::RootJobs;
-
 mod auxiliary;
 mod error;
 mod export;
@@ -12,31 +5,20 @@ mod param;
 mod root;
 mod seed;
 
+pub use crate::root::RootJobs;
+pub use error::SeedingErrors;
 pub use seed::seed_folder::SeedFolder;
-
-pub fn execute<R: RootJobs, Q: AsRef<Path>>(
-    root: &R,
-    cell_builder: &impl CellBuilding,
-    param_builder: &impl ParamBuilding,
-    potentials_loc: Q,
-) -> Result<(), SeedingErrors> {
-    root.fetch_potential_files(potentials_loc)?;
-    let seed_folders = root.generate_seed_folders()?;
-    seed_folders
-        .iter()
-        .try_for_each(|seed| seed.actions(cell_builder, param_builder))
-}
+pub use seed::seed_setup::{CellBuilding, ParamBuilding};
 
 #[cfg(test)]
 mod test {
+    use crate::CellBuilding;
+    use crate::ParamBuilding;
+    use castep_cell_io::cell_document::{CellDocument, KpointQuality};
+    use castep_cell_io::{CastepParams, EnergyCutoffError};
     use std::path::{Path, PathBuf};
 
-    use castep_cell_io::{
-        CastepParams, CellBuilding, CellDocument, EnergyCutoffError, KpointQuality, ParamBuilding,
-    };
-
     use crate::{
-        execute,
         seed::{parse_cell_doc_from_path, seed_folder::SeedFolder},
         RootJobs, SeedingErrors,
     };
@@ -85,7 +67,7 @@ mod test {
             self.cell_path.as_ref().parent().unwrap()
         }
 
-        fn cell_template(&self) -> &castep_cell_io::CellDocument {
+        fn cell_template(&self) -> &CellDocument {
             &self.cell_doc
         }
     }
@@ -153,7 +135,7 @@ mod test {
         let test_folder = RootFolder::new("test/Bi2Te3_001_Fe_2.2");
         let potentials_loc = "/Users/tonywu/Downloads/Potentials";
         let config = Configurator::new(true, KpointQuality::Coarse, potentials_loc);
-        match execute(&test_folder, &config, &config, potentials_loc) {
+        match test_folder.build_all(&config, &config, potentials_loc) {
             Ok(()) => {
                 println!("Success")
             }

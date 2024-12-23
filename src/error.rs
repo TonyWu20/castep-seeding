@@ -1,57 +1,33 @@
 use std::{error::Error, fmt::Display, io};
 
-use castep_cell_io::CellParseError;
+use castep_cell_io::{CellParseError, EnergyCutoffError};
 use glob::{GlobError, PatternError};
+use thiserror::Error;
 
-#[derive(Debug)]
+#[derive(Debug, Error)]
 pub enum SeedingErrors {
+    #[error("The glob match pattern has invalid UTF-8 characters")]
     InvalidPattern,
-    MatchingCellFiles(PatternError),
-    GlobError(GlobError),
-    ReadToString(io::Error),
-    CellParseError(CellParseError),
+    #[error("Did not find any matching results")]
+    NoMatchingResults,
+    #[error("Pattern error during matching cell files: {0}")]
+    MatchingCellFiles(#[from] PatternError),
+    #[error("Path error during matching pattern: {0}")]
+    GlobError(#[from] GlobError),
+    #[error("Error during reading given cell file path: {0}")]
+    ReadToString(#[from] io::Error),
+    #[error("Error during parsing cell file: {0}")]
+    CellParseError(#[from] CellParseError),
+    #[error("Error during creating seed dir: {0}")]
     CreateSeedDir(io::Error),
+    #[error("Error during creating soft link: {0}")]
     SoftlinkError(io::Error),
+    #[error("Error during copy: {0}")]
     CopyError(io::Error),
+    #[error("Error during writing: {0}")]
     WriteError(io::Error),
+    #[error("Directory already exists")]
     DirectoryExist,
+    #[error("Error getting cutoff energy: {0}")]
+    CutoffEnergy(#[from] EnergyCutoffError),
 }
-
-impl Display for SeedingErrors {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SeedingErrors::MatchingCellFiles(e) => {
-                write!(f, "Pattern error during matching cell files: {}", e)
-            }
-            SeedingErrors::GlobError(e) => {
-                write!(f, "Path error during matching pattern: {}", e)
-            }
-            SeedingErrors::ReadToString(e) => {
-                write!(f, "Error during reading given cell file path: {}", e)
-            }
-            SeedingErrors::CellParseError(e) => {
-                write!(f, "Error during parsing cell file: {}", e)
-            }
-            SeedingErrors::InvalidPattern => {
-                write!(f, "The glob match pattern has invalid UTF-8 characters")
-            }
-            SeedingErrors::CreateSeedDir(e) => {
-                write!(f, "Error during creating seed dir: {}", e)
-            }
-            SeedingErrors::SoftlinkError(e) => {
-                write!(f, "Error during creating soft link: {}", e)
-            }
-            SeedingErrors::CopyError(e) => {
-                write!(f, "Error during copying psuedopotential files: {}", e)
-            }
-            SeedingErrors::WriteError(e) => {
-                write!(f, "Error during writing file: {}", e)
-            }
-            SeedingErrors::DirectoryExist => {
-                write!(f, "Directory already exists")
-            }
-        }
-    }
-}
-
-impl Error for SeedingErrors {}

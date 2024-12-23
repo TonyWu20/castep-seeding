@@ -1,4 +1,4 @@
-use castep_cell_io::CellDocument;
+use castep_cell_io::cell_document::CellDocument;
 use castep_periodic_table::{
     data::ELEMENT_TABLE,
     element::{ElementSymbol, LookupElement},
@@ -11,43 +11,31 @@ use std::{
 };
 
 use crate::{
-    error::SeedingErrors,
-    seed::{parse_cell_doc_from_path, Seed},
+    error::SeedingErrors, seed::parse_cell_doc_from_path, CellBuilding, ParamBuilding, SeedFolder,
 };
 
-/// A struct to process a folder of many cell files.
-#[derive(Debug)]
-pub struct RootFolder {
-    path: PathBuf,
-}
-
-impl RootFolder {
-    pub fn new(path: PathBuf) -> Self {
-        Self { path }
-    }
-
-    pub fn path(&self) -> &PathBuf {
-        &self.path
-    }
-}
-
+/// A trait to process a folder of many cell files.
 pub trait RootJobs {
-    fn get_cell_paths(&self) -> Result<Vec<PathBuf>, SeedingErrors>;
-    fn get_cell_entries(&self) -> Result<Vec<CellDocument>, SeedingErrors>;
-    fn get_all_elements(&self) -> Result<HashSet<ElementSymbol>, SeedingErrors>;
-    fn fetch_potential_files<P: AsRef<Path>>(&self, potentials_loc: P)
-        -> Result<(), SeedingErrors>;
-    fn generate_seed_folders(&self) -> Result<Vec<Seed>, SeedingErrors>;
-}
-
-impl RootJobs for RootFolder {
+    fn root_path(&self) -> impl AsRef<Path>;
+    fn get_cell_paths(&self) -> Result<Vec<PathBuf>, SeedingErrors> {
+        let binding = self.root_path().as_ref().join("*.cell");
+        let pattern = binding.to_str().ok_or(SeedingErrors::InvalidPattern)?;
+        let cell_paths = glob(pattern)
+            .map_err(SeedingErrors::MatchingCellFiles)?
+            .map(|paths| paths.map_err(SeedingErrors::GlobError))
+            .collect::<Result<Vec<PathBuf>, SeedingErrors>>()?;
+        if cell_paths.is_empty() {
+            Err(SeedingErrors::NoMatchingResults)
+        } else {
+            Ok(cell_paths)
+        }
+    }
     fn get_cell_entries(&self) -> Result<Vec<CellDocument>, SeedingErrors> {
         self.get_cell_paths()?
             .into_iter()
             .map(parse_cell_doc_from_path)
             .collect()
     }
-
     fn get_all_elements(&self) -> Result<HashSet<ElementSymbol>, SeedingErrors> {
         let entries = self.get_cell_entries()?;
         let all_elements: HashSet<ElementSymbol> = HashSet::from_iter(
@@ -58,7 +46,6 @@ impl RootJobs for RootFolder {
         );
         Ok(all_elements)
     }
-
     fn fetch_potential_files<P: AsRef<Path>>(
         &self,
         potentials_loc: P,
@@ -67,7 +54,7 @@ impl RootJobs for RootFolder {
         let copy_element = elements.iter().try_for_each(|element| {
             let potential_file = ELEMENT_TABLE.get_by_symbol(*element).potential();
             let potential_path = potentials_loc.as_ref().join(potential_file);
-            let dst_path = self.path().join(potential_file);
+            let dst_path = self.root_path().as_ref().join(potential_file);
             if !dst_path.exists() {
                 let copy =
                     std::fs::copy(potential_path, dst_path).map_err(SeedingErrors::CopyError);
@@ -84,20 +71,18 @@ impl RootJobs for RootFolder {
             ControlFlow::Break(e) => Err(e),
         }
     }
-
-    fn get_cell_paths(&self) -> Result<Vec<PathBuf>, SeedingErrors> {
-        let binding = self.path().join("*.cell");
-        let pattern = binding.to_str().ok_or(SeedingErrors::InvalidPattern)?;
-        glob(pattern)
-            .map_err(SeedingErrors::MatchingCellFiles)?
-            .map(|paths| paths.map_err(SeedingErrors::GlobError))
-            .collect()
-    }
-
-    fn generate_seed_folders(&self) -> Result<Vec<Seed>, SeedingErrors> {
-        self.get_cell_paths()?
-            .into_iter()
-            .map(Seed::from_matched_path)
-            .collect()
+    /// Implementation of generation of struct that impl `SeedFolder`
+    fn generate_seed_folders(&self) -> Result<Vec<impl SeedFolder>, SeedingErrors>;
+    /// Execute all actions to build seed files from `.cell` files under the root path.
+    fn build_all<L: AsRef<Path>, C: CellBuilding, P: ParamBuilding>(
+        &self,
+        cell_builder: &C,
+        param_builder: &P,
+        potentials_loc: L,
+    ) -> Result<(), SeedingErrors> {
+        self.fetch_potential_files(potentials_loc)?;
+        self.generate_seed_folders()?
+            .iter()
+            .try_for_each(|seed| seed.actions(cell_builder, param_builder))
     }
 }
