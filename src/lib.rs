@@ -12,6 +12,7 @@ pub use seed::seed_setup::{CellBuilding, ParamBuilding};
 
 #[cfg(test)]
 mod test {
+    /// Example Usage
     use crate::CellBuilding;
     use crate::ParamBuilding;
     use castep_cell_io::cell_document::{CellDocument, KpointQuality};
