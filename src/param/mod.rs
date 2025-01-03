@@ -61,6 +61,6 @@ pub struct CastepParam {
 pub trait KeywordDisplay: Display {
     fn field(&self) -> String;
     fn output(&self) -> String {
-        format!("{} : {}", self.field(), self.to_string())
+        format!("{} : {}", self.field(), self)
     }
 }
