@@ -1,4 +1,4 @@
-use std::{error::Error, fmt::Display, io};
+use std::io;
 
 use castep_cell_io::{CellParseError, EnergyCutoffError};
 use glob::{GlobError, PatternError};
