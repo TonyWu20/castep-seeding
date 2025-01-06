@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 mod general;
+mod pseudopotentials;
 mod units;
 mod band_structure {
     #[derive(Debug, Clone)]
@@ -40,6 +41,7 @@ use electronic::Electronic;
 pub use general::*;
 use geom_opt::GeomOpt;
 use population::Population;
+pub use pseudopotentials::*;
 pub use units::*;
 use xc_correlation::XcParam;
 
@@ -47,6 +49,7 @@ use xc_correlation::XcParam;
 pub struct CastepParam {
     general_keywords: Option<General>,
     units: Option<Units>,
+    pseudopotentials: Option<Pseudopotentials>,
     band_structure: Option<BandStructure>,
     basis_set: Option<BasisSet>,
     electro_min: Option<ElectroMinimization>,
