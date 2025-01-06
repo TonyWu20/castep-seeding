@@ -6,10 +6,7 @@ mod band_structure {
     #[derive(Debug, Clone)]
     pub struct BandStructure;
 }
-mod basis_set {
-    #[derive(Debug, Clone)]
-    pub struct BasisSet;
-}
+mod basis_set;
 
 mod electro_min {
     #[derive(Debug, Clone)]
@@ -35,7 +32,7 @@ mod population {
 use std::fmt::Display;
 
 use band_structure::BandStructure;
-use basis_set::BasisSet;
+pub use basis_set::*;
 use electro_min::ElectroMinimization;
 use electronic::Electronic;
 pub use general::*;
