@@ -39,24 +39,25 @@ pub use write_props::WriteProperties;
 
 #[derive(Debug, Clone, Default, Hash, Serialize, Deserialize, Builder)]
 #[builder(setter(into, strip_option), default)]
+/// Keywords that belong to general category.
 pub struct General {
-    backup: Option<BackUpSetting>,
-    calculate_props: Option<CalculateProperties>,
-    charge_unit: Option<ChargeUnit>,              // E
-    checkpoint: Option<Checkpoint>,               // seedname.check
-    comment: Option<String>,                      // Blank
-    continuation_reuse: Option<ContinueReuse>,    // Null
-    data_distribution: Option<DataDistribution>,  // Default
-    opt_strategy: Option<OptStrategy>,            // Default
-    page_wvfns: Option<PageWvfns>,                // 0
-    print_clock: Option<PrintClock>,              // true
-    print_memory_usage: Option<PrintMemoryUsage>, // true
-    rand_seed: Option<RandSeed>,                  // 0
-    run_time: Option<RunTime>,                    // 0
-    stop: Option<Stop>,                           // Example: STOP
-    task: Option<CastepTask>,
-    write_checkpoint: Option<WriteCheckpoint>,
-    write_props: Option<WriteProperties>,
+    pub backup: Option<BackUpSetting>,
+    pub calculate_props: Option<CalculateProperties>, // Default to all false
+    pub charge_unit: Option<ChargeUnit>,              // E
+    pub checkpoint: Option<Checkpoint>,               // seedname.check
+    pub comment: Option<String>,                      // Blank
+    pub continuation_reuse: Option<ContinueReuse>,    // Null
+    pub data_distribution: Option<DataDistribution>,  // Default
+    pub opt_strategy: Option<OptStrategy>,            // Default
+    pub page_wvfns: Option<PageWvfns>,                // 0
+    pub print_clock: Option<PrintClock>,              // true
+    pub print_memory_usage: Option<PrintMemoryUsage>, // true
+    pub rand_seed: Option<RandSeed>,                  // 0
+    pub run_time: Option<RunTime>,                    // 0
+    pub stop: Option<Stop>,                           // Example: STOP
+    pub task: Option<CastepTask>,                     // Default: CastepTask::SinglePoint
+    pub write_checkpoint: Option<WriteCheckpoint>,
+    pub write_props: Option<WriteProperties>, // Default to all false
 }
 
 impl Display for General {
