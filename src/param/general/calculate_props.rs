@@ -124,9 +124,9 @@ macro_rules! from_for_bool_type {
     ($($x: ident),*) => {
         $(
     impl From<bool> for $x {
-    fn from(value: bool) -> Self {
-        Self(value)
-    }
+        fn from(value: bool) -> Self {
+            Self(value)
+        }
 }
         )*
     }

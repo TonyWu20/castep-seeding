@@ -25,11 +25,7 @@ mod geom_opt {
     pub struct GeomOpt;
 }
 
-mod xc_correlation {
-    #[derive(Debug, Clone)]
-    pub struct XcParam;
-}
-
+mod xc_correlation;
 mod population {
     #[derive(Debug, Clone)]
     pub struct Population;
@@ -44,7 +40,7 @@ use electronic::Electronic;
 pub use general::*;
 use geom_opt::GeomOpt;
 use population::Population;
-use units::Units;
+pub use units::*;
 use xc_correlation::XcParam;
 
 #[derive(Debug, Clone)]
