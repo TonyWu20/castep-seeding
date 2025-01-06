@@ -41,21 +41,23 @@ use band_structure::BandStructure;
 use basis_set::BasisSet;
 use electro_min::ElectroMinimization;
 use electronic::Electronic;
-use general::General;
+pub use general::*;
 use geom_opt::GeomOpt;
 use population::Population;
+use units::Units;
 use xc_correlation::XcParam;
 
 #[derive(Debug, Clone)]
 pub struct CastepParam {
-    general_keywords: General,
-    band_structure: BandStructure,
-    basis_set: BasisSet,
-    electro_min: ElectroMinimization,
-    electronic: Electronic,
-    geom_opt: GeomOpt,
-    xc_correlation: XcParam,
-    population: Population,
+    general_keywords: Option<General>,
+    units: Option<Units>,
+    band_structure: Option<BandStructure>,
+    basis_set: Option<BasisSet>,
+    electro_min: Option<ElectroMinimization>,
+    electronic: Option<Electronic>,
+    geom_opt: Option<GeomOpt>,
+    xc_correlation: Option<XcParam>,
+    population: Option<Population>,
 }
 
 pub trait KeywordDisplay: Display {
