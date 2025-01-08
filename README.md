@@ -15,7 +15,7 @@ Generate `castep` seed files
   - [x] Exchange-correlation parameters
   - [x] Pseudopotentials
   - [x] Basis set parameters
-  - [ ] Electronic parameters
+  - [x] Electronic parameters (partially completed)
   - [ ] Electronic minimization parameters
   - [ ] Density mixing parameters
   - [ ] Population analysis
