@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
@@ -13,8 +14,20 @@ use crate::param::KeywordDisplay;
 /// - If FINITE_BASIS_CORR : 1, a value for BASIS_DE_DLOGE must be supplied.
 /// - You should turn off finite basis set correction when using a fixed size basis (see `FixedNPW`).
 #[derive(
-    Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default,
+    Debug,
+    Clone,
+    Copy,
+    Hash,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Serialize,
+    Deserialize,
+    Default,
+    KeywordDisplay,
 )]
+#[keyword_display(direct_display = false, field = "FINITE_BASIS_CORR")]
 pub enum FiniteBasisCorr {
     NoCorrection,
     Manual,
@@ -29,11 +42,5 @@ impl Display for FiniteBasisCorr {
             FiniteBasisCorr::Manual => f.write_str("1"),
             FiniteBasisCorr::Auto => f.write_str("2"),
         }
-    }
-}
-
-impl KeywordDisplay for FiniteBasisCorr {
-    fn field(&self) -> String {
-        "FINITE_BASIS_CORR".to_string()
     }
 }

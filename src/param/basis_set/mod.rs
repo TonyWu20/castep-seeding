@@ -1,7 +1,7 @@
-use std::{fmt::Display, thread::Builder};
-
+use castep_seeding_derive::ParamDisplay;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 
 mod basis_de_dloge;
 mod basis_precision;
@@ -29,7 +29,7 @@ pub use grid_scale::GridScale;
 
 use super::KeywordDisplay;
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, Builder)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, Builder, ParamDisplay)]
 #[builder(
     setter(into, strip_option),
     default,
@@ -83,28 +83,6 @@ impl BasisSetBuilder {
             }
         }
         Ok(())
-    }
-}
-
-impl Display for BasisSet {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let output = [
-            self.basis_de_dloge.map(|v| v.output()),
-            self.basis_precision.map(|v| v.output()),
-            self.cut_off_energy.map(|v| v.output()),
-            self.fine_gmax.map(|v| v.output()),
-            self.fine_grid_scale.map(|v| v.output()),
-            self.finite_basis_corr.map(|v| v.output()),
-            self.finite_basis_npoints.map(|v| v.output()),
-            self.finite_basis_spacing.map(|v| v.output()),
-            self.fixed_npw.map(|v| v.output()),
-            self.grid_scale.map(|v| v.output()),
-        ]
-        .into_iter()
-        .flatten()
-        .collect::<Vec<String>>()
-        .join("\n");
-        write!(f, "{}", output)
     }
 }
 

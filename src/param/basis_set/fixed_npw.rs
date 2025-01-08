@@ -1,3 +1,6 @@
+use std::fmt::Display;
+
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
@@ -16,24 +19,18 @@ use crate::param::KeywordDisplay;
 /// # Example
 /// `FIXED_NPW : TRUE`
 #[derive(
-    Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Hash, Default,
+    Debug,
+    Clone,
+    Copy,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Default,
+    KeywordDisplay,
 )]
+#[keyword_display(field="FIXED_NPW", from=bool,value=bool)]
 pub struct FixedNPW(bool);
-
-impl From<bool> for FixedNPW {
-    fn from(value: bool) -> Self {
-        Self(value)
-    }
-}
-
-impl std::fmt::Display for FixedNPW {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        <bool as std::fmt::Display>::fmt(&self.0, f)
-    }
-}
-
-impl KeywordDisplay for FixedNPW {
-    fn field(&self) -> String {
-        "FIXED_NPW".to_string()
-    }
-}

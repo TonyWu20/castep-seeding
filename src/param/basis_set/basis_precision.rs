@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
@@ -15,8 +16,20 @@ use crate::param::KeywordDisplay;
 /// # Note
 /// It is not possible to specify both the `BASIS_PRECISION` and the `CUT_OFF_ENERGY` in a single file.
 #[derive(
-    Debug, Clone, Copy, Default, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord,
+    Debug,
+    Clone,
+    Copy,
+    Default,
+    Serialize,
+    Deserialize,
+    Hash,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    KeywordDisplay,
 )]
+#[keyword_display(field = "BASIS_PRECISION", direct_display = false)]
 pub enum BasisPrecision {
     Coarse,
     Medium,
@@ -29,11 +42,5 @@ pub enum BasisPrecision {
 impl Display for BasisPrecision {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", format!("{:?}", self).to_uppercase())
-    }
-}
-
-impl KeywordDisplay for BasisPrecision {
-    fn field(&self) -> String {
-        "BASIS_PRECISION".to_string()
     }
 }

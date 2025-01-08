@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
@@ -11,26 +12,11 @@ use crate::param::KeywordDisplay;
 /// 3
 /// # Example
 /// `FINITE_BASIS_NPOINTS : 5`
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, KeywordDisplay,
+)]
+#[keyword_display(field="FINITE_BASIS_NPOINTS", from=u32, value=u32)]
 pub struct FiniteBasisNPoints(u32);
-
-impl Display for FiniteBasisNPoints {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> core::fmt::Result {
-        <u32 as Display>::fmt(&self.0, f)
-    }
-}
-
-impl From<u32> for FiniteBasisNPoints {
-    fn from(value: u32) -> Self {
-        Self(value)
-    }
-}
-
-impl KeywordDisplay for FiniteBasisNPoints {
-    fn field(&self) -> String {
-        "FINITE_BASIS_NPOINTS".to_string()
-    }
-}
 
 impl Default for FiniteBasisNPoints {
     fn default() -> Self {

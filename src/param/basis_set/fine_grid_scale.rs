@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
@@ -9,29 +10,12 @@ use crate::param::KeywordDisplay;
 /// 1  - this results in the fine and standard grids being identical
 /// # Example
 /// `FINE_GRID_SCALE : 2.0`
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, KeywordDisplay)]
+#[keyword_display(display_format="{:20.15}", from=f64,value=f64, field="FINE_GRID_SCALE")]
 pub struct FineGridScale(f64);
-
-impl Display for FineGridScale {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:20.15}", self.0)
-    }
-}
-
-impl From<f64> for FineGridScale {
-    fn from(value: f64) -> Self {
-        Self(value)
-    }
-}
 
 impl Default for FineGridScale {
     fn default() -> Self {
         Self(1.0)
-    }
-}
-
-impl KeywordDisplay for FineGridScale {
-    fn field(&self) -> String {
-        "FINE_GRID_SCALE".to_string()
     }
 }
