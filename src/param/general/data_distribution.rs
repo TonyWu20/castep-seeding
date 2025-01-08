@@ -1,10 +1,22 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
 #[derive(
-    Debug, Default, Clone, Copy, Hash, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord,
+    Debug,
+    Default,
+    Clone,
+    Copy,
+    Hash,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    KeywordDisplay,
 )]
 /// This keyword determines the parallelization strategy used. Available options are:
 /// `Kpoint` - only k-point parallelization will be used (best scalability)
@@ -20,27 +32,11 @@ use crate::param::KeywordDisplay;
 /// `Default`
 /// # Example
 /// `DATA_DISTRIBUTION : Gvector`
+#[keyword_display(field = "DATA_DISTRIBUTION")]
 pub enum DataDistribution {
     Kpoint,
     Gvector,
     Mixed,
     #[default]
     Default,
-}
-
-impl Display for DataDistribution {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            DataDistribution::Kpoint => f.write_str("Kpoint"),
-            DataDistribution::Gvector => f.write_str("Gvector"),
-            DataDistribution::Mixed => f.write_str("Mixed"),
-            DataDistribution::Default => f.write_str("Default"),
-        }
-    }
-}
-
-impl KeywordDisplay for DataDistribution {
-    fn field(&self) -> String {
-        "DATA_DISTRIBUTION".to_string()
-    }
 }

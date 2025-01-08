@@ -1,12 +1,16 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
 
-#[derive(Debug, Clone, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, Serialize, Deserialize, KeywordDisplay)]
+#[keyword_display(specified_fields = true)]
 pub enum ContinueReuse {
+    #[keyword_display(field = "CONTINUATION")]
     Continuation(Continuation),
+    #[keyword_display(field = "REUSE")]
     Reuse(Reuse),
 }
 
@@ -28,58 +32,42 @@ impl From<Reuse> for ContinueReuse {
     }
 }
 
-#[derive(Debug, Clone, Default, Hash, Serialize, Deserialize)]
+#[derive(
+    Debug,
+    Clone,
+    Default,
+    Hash,
+    Serialize,
+    Deserialize,
+    KeywordDisplay,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+)]
+#[keyword_display(field = "CONTINUATION")]
 pub enum Continuation {
     #[default]
     Default,
     File(String),
 }
 
-#[derive(Debug, Clone, Default, Hash, Serialize, Deserialize)]
+#[derive(
+    Debug,
+    Clone,
+    Default,
+    Hash,
+    Serialize,
+    Deserialize,
+    KeywordDisplay,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+)]
+#[keyword_display(field = "REUSE")]
 pub enum Reuse {
     #[default]
     Default,
     File(String),
-}
-
-impl Display for Continuation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Continuation::Default => f.write_str("default"),
-            Continuation::File(s) => write!(f, "{s}"),
-        }
-    }
-}
-
-impl KeywordDisplay for Continuation {
-    fn field(&self) -> String {
-        "CONTINUATION".to_string()
-    }
-}
-
-impl Display for Reuse {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Reuse::Default => f.write_str("default"),
-            Reuse::File(s) => write!(f, "{s}"),
-        }
-    }
-}
-
-impl Display for ContinueReuse {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ContinueReuse::Continuation(continuation) => write!(f, "{continuation}"),
-            ContinueReuse::Reuse(reuse) => write!(f, "{reuse}"),
-        }
-    }
-}
-
-impl KeywordDisplay for ContinueReuse {
-    fn field(&self) -> String {
-        match self {
-            ContinueReuse::Continuation(_) => "CONTINUATION".to_string(),
-            ContinueReuse::Reuse(_) => "REUSE".to_string(),
-        }
-    }
 }

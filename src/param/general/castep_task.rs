@@ -1,12 +1,25 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
 
 #[derive(
-    Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize,
+    Debug,
+    Clone,
+    Copy,
+    Default,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Serialize,
+    Deserialize,
+    KeywordDisplay,
 )]
+#[keyword_display(field = "TASK")]
 #[non_exhaustive]
 pub enum CastepTask {
     BandStructure,        // calculates band structure properties.
@@ -26,22 +39,6 @@ pub enum CastepTask {
                           // Autosolvation, // performs a free energy of solvation calculation.
 }
 
-impl Display for CastepTask {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            CastepTask::BandStructure => f.write_str("bandstructure"),
-            CastepTask::GeometryOptimization => f.write_str("GeometryOptimization"),
-            CastepTask::SinglePoint => f.write_str("SinglePoint"),
-        }
-    }
-}
-
-impl KeywordDisplay for CastepTask {
-    fn field(&self) -> String {
-        "TASK".to_string()
-    }
-}
-
 #[cfg(test)]
 mod test {
     use crate::param::KeywordDisplay;
@@ -53,7 +50,7 @@ mod test {
         let task = CastepTask::default();
         assert_eq!("TASK : SinglePoint", task.output());
         let bandstr = CastepTask::BandStructure;
-        assert_eq!("TASK : bandstructure", bandstr.output());
+        assert_eq!("TASK : BandStructure", bandstr.output());
         let geom_opt = CastepTask::GeometryOptimization;
         assert_eq!("TASK : GeometryOptimization", geom_opt.output());
     }

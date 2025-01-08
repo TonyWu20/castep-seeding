@@ -1,23 +1,21 @@
 use std::fmt::Display;
 
+use crate::param::KeywordDisplay;
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
-use crate::param::KeywordDisplay;
 
 #[derive(
     Debug,
     Clone,
-    Copy,
     PartialEq,
     Eq,
     PartialOrd,
     Ord,
+    KeywordDisplay,
+    Default,
     Serialize,
     Deserialize,
-    Default,
     Hash,
-    KeywordDisplay,
 )]
-#[keyword_display(field="RAND_SEED",from=i64,value=i64)]
-pub struct RandSeed(i64);
+#[keyword_display(field="COMMENT", from=String, borrowed_value=str)]
+pub struct Comment(String);

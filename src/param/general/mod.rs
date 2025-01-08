@@ -1,4 +1,5 @@
 use super::KeywordDisplay;
+use castep_seeding_derive::ParamDisplay;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
@@ -7,6 +8,7 @@ mod calculate_props;
 mod castep_task;
 mod charge_unit;
 mod checkpoint;
+mod comment;
 mod continuation;
 mod data_distribution;
 mod opt_strategy;
@@ -24,6 +26,7 @@ pub use calculate_props::CalculateProperties;
 pub use castep_task::CastepTask;
 pub use charge_unit::ChargeUnit;
 pub use checkpoint::Checkpoint;
+pub use comment::Comment;
 pub use continuation::{Continuation, ContinueReuse, Reuse};
 pub use data_distribution::DataDistribution;
 pub use derive_builder::Builder;
@@ -37,56 +40,31 @@ pub use stop::Stop;
 pub use write_checkpoint::{WriteCheckpoint, WriteCheckpointOption, WriteCheckpointValue};
 pub use write_props::WriteProperties;
 
-#[derive(Debug, Clone, Default, Hash, Serialize, Deserialize, Builder)]
+#[derive(Debug, Clone, Default, Hash, Serialize, Deserialize, Builder, ParamDisplay)]
 #[builder(setter(into, strip_option), default)]
 /// Keywords that belong to general category.
 pub struct General {
     pub backup: Option<BackUpSetting>,
+    #[param_display(display=to_string())]
     pub calculate_props: Option<CalculateProperties>, // Default to all false
-    pub charge_unit: Option<ChargeUnit>,              // E
-    pub checkpoint: Option<Checkpoint>,               // seedname.check
-    pub comment: Option<String>,                      // Blank
-    pub continuation_reuse: Option<ContinueReuse>,    // Null
-    pub data_distribution: Option<DataDistribution>,  // Default
-    pub opt_strategy: Option<OptStrategy>,            // Default
-    pub page_wvfns: Option<PageWvfns>,                // 0
-    pub print_clock: Option<PrintClock>,              // true
+    pub charge_unit: Option<ChargeUnit>, // E
+    #[param_display(use_ref = true)]
+    pub checkpoint: Option<Checkpoint>, // seedname.check
+    #[param_display(use_ref = true)]
+    pub comment: Option<Comment>, // Blank
+    #[param_display(use_ref = true)]
+    pub continuation_reuse: Option<ContinueReuse>, // Null
+    pub data_distribution: Option<DataDistribution>, // Default
+    pub opt_strategy: Option<OptStrategy>, // Default
+    pub page_wvfns: Option<PageWvfns>,   // 0
+    pub print_clock: Option<PrintClock>, // true
     pub print_memory_usage: Option<PrintMemoryUsage>, // true
-    pub rand_seed: Option<RandSeed>,                  // 0
-    pub run_time: Option<RunTime>,                    // 0
-    pub stop: Option<Stop>,                           // Example: STOP
-    pub task: Option<CastepTask>,                     // Default: CastepTask::SinglePoint
+    pub rand_seed: Option<RandSeed>,     // 0
+    pub run_time: Option<RunTime>,       // 0
+    pub stop: Option<Stop>,              // Example: STOP
+    pub task: Option<CastepTask>,        // Default: CastepTask::SinglePoint
     pub write_checkpoint: Option<WriteCheckpoint>,
     pub write_props: Option<WriteProperties>, // Default to all false
-}
-
-impl Display for General {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let output = [
-            self.backup.map(|v| v.output()),
-            self.calculate_props.map(|v| v.to_string()),
-            self.charge_unit.map(|v| v.output()),
-            self.checkpoint.as_ref().map(|v| v.output()),
-            self.comment.clone(),
-            self.continuation_reuse.as_ref().map(|v| v.output()),
-            self.data_distribution.map(|v| v.output()),
-            self.opt_strategy.map(|v| v.output()),
-            self.page_wvfns.map(|v| v.output()),
-            self.print_clock.map(|v| v.output()),
-            self.print_memory_usage.map(|v| v.output()),
-            self.rand_seed.map(|v| v.output()),
-            self.run_time.map(|v| v.output()),
-            self.stop.map(|v| v.output()),
-            self.task.map(|v| v.output()),
-            self.write_checkpoint.map(|v| v.output()),
-            self.write_props.map(|v| v.output()),
-        ]
-        .into_iter()
-        .flatten()
-        .collect::<Vec<String>>()
-        .join("\n");
-        write!(f, "{}", output)
-    }
 }
 
 #[cfg(test)]

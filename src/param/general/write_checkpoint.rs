@@ -1,10 +1,14 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
 
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, KeywordDisplay,
+)]
+#[keyword_display(field = "WRITE_CHECKPOINT")]
 pub enum WriteCheckpoint {
     Value(WriteCheckpointValue),
     Option(WriteCheckpointOption),
@@ -31,6 +35,7 @@ impl From<WriteCheckpointOption> for WriteCheckpoint {
 #[derive(
     Debug, Clone, Copy, Default, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize,
 )]
+
 pub enum WriteCheckpointValue {
     None,
     Minimal,
@@ -72,25 +77,6 @@ impl Display for WriteCheckpointOption {
             WriteCheckpointOption::Failure(v) => write!(f, "FAILURE={v}"),
             WriteCheckpointOption::Backup(v) => write!(f, "BACKUP={v}"),
         }
-    }
-}
-
-impl Display for WriteCheckpoint {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            WriteCheckpoint::Value(write_checkpoint_value) => {
-                write!(f, "{}", write_checkpoint_value)
-            }
-            WriteCheckpoint::Option(write_checkpoint_option) => {
-                write!(f, "{}", write_checkpoint_option)
-            }
-        }
-    }
-}
-
-impl KeywordDisplay for WriteCheckpoint {
-    fn field(&self) -> String {
-        "WRITE_CHECKPOINT".to_string()
     }
 }
 

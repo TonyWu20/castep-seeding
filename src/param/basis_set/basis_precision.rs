@@ -29,7 +29,7 @@ use crate::param::KeywordDisplay;
     Ord,
     KeywordDisplay,
 )]
-#[keyword_display(field = "BASIS_PRECISION", direct_display = false)]
+#[keyword_display(field = "BASIS_PRECISION")]
 pub enum BasisPrecision {
     Coarse,
     Medium,
@@ -37,10 +37,4 @@ pub enum BasisPrecision {
     Fine,
     Precise,
     Extreme,
-}
-
-impl Display for BasisPrecision {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", format!("{:?}", self).to_uppercase())
-    }
 }
