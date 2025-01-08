@@ -8,6 +8,7 @@ use syn::{parse_macro_input, DeriveInput, Ident};
 struct Opts {
     field: String,
     from: Option<Ident>,
+    value: Option<Ident>,
 }
 
 #[proc_macro_derive(KeywordDisplay, attributes(keyword_display))]
@@ -33,11 +34,23 @@ pub fn derive(input: TokenStream) -> TokenStream {
         None => quote! {},
     };
 
+    let value = match opts.value {
+        Some(x) => quote! {
+            impl #ident {
+                pub fn value(&self) -> #x {
+                    self.0
+                }
+            }
+        },
+        None => quote! {},
+    };
+
     let output = quote! {
         impl KeywordDisplay for #ident {
             #field_text
         }
         #from
+        #value
     };
     output.into()
 }
