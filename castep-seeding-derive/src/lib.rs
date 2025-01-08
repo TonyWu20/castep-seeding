@@ -88,7 +88,7 @@ fn data_enum_display_impl(data_enum: &DataEnum, struct_ident: &Ident) -> proc_ma
             syn::Fields::Named(_) => unimplemented!(),
             syn::Fields::Unnamed(_) => quote! {
                 #struct_ident::#name(t) => write!(f, #display_format, t)},
-            syn::Fields::Unit => quote! {#struct_ident::#name => write!(f, "{}", format!("{:?}", self).to_uppercase())},
+            syn::Fields::Unit => quote! {#struct_ident::#name => write!(f, "{:?}", self)},
         }
     });
     quote! {
