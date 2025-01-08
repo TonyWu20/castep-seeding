@@ -24,7 +24,7 @@ use crate::param::KeywordDisplay;
     Default,
     KeywordDisplay,
 )]
-#[keyword_display(field = "SPIN_POLARIZED")]
+#[keyword_display(field = "SPIN_POLARIZED", direct_display = false)]
 pub enum SpinPolarised {
     True,
     #[default]

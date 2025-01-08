@@ -1,12 +1,13 @@
+use castep_seeding_derive::ParamDisplay;
+use derive_builder::Builder;
+use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-use bands_option::BandsOption;
-use charge::Charge;
-use derive_builder::Builder;
-use nelectrons::{NDown, NElectrons, NUp};
-use serde::{Deserialize, Serialize};
-use spin::Spin;
-use spin_polarised::SpinPolarised;
+pub use bands_option::*;
+pub use charge::Charge;
+pub use nelectrons::{NDown, NElectrons, NUp};
+pub use spin::Spin;
+pub use spin_polarised::SpinPolarised;
 
 use crate::param::KeywordDisplay;
 
@@ -16,12 +17,13 @@ mod nelectrons;
 mod spin;
 mod spin_polarised;
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, Builder)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, Builder, ParamDisplay)]
 #[non_exhaustive]
 #[builder(setter(into, strip_option), default)]
 /// `Electronic parameters` section of castep `.param`
 pub struct ElectronicParam {
     charge: Option<Charge>,
+    #[param_display(display=to_string())]
     bands_option: Option<BandsOption>,
     spin_polarised: Option<SpinPolarised>,
     nelectrons: Option<NElectrons>,
@@ -38,25 +40,6 @@ pub struct ElectronicParam {
                         // SEDC_SR_JCHS
                         // SEDC_SR_TS
                         // SEDC_SCHEME
-}
-
-impl Display for ElectronicParam {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let output = [
-            self.charge.map(|v| v.output()),
-            self.bands_option.map(|b| format!("{b}")),
-            self.spin_polarised.map(|v| v.output()),
-            self.nelectrons.map(|v| v.output()),
-            self.nup.map(|v| v.output()),
-            self.ndown.map(|v| v.output()),
-            self.spin.map(|v| v.output()),
-        ]
-        .into_iter()
-        .flatten()
-        .collect::<Vec<String>>()
-        .join("\n");
-        write!(f, "{output}")
-    }
 }
 
 #[cfg(test)]

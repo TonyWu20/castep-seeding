@@ -16,12 +16,6 @@ use crate::param::KeywordDisplay;
 /// 1 when the total number of electrons in the system is odd.
 pub struct Spin(f64);
 
-impl Display for Spin {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
 #[cfg(test)]
 mod test {
     use crate::param::KeywordDisplay;

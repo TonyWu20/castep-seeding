@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
@@ -11,23 +12,6 @@ use crate::param::KeywordDisplay;
 /// 0
 /// Example
 /// CHARGE : 3
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, PartialOrd, KeywordDisplay)]
+#[keyword_display(field="CHARGE", from=f64, value=f64)]
 pub struct Charge(f64);
-
-impl From<f64> for Charge {
-    fn from(value: f64) -> Self {
-        Self(value)
-    }
-}
-
-impl Display for Charge {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl KeywordDisplay for Charge {
-    fn field(&self) -> String {
-        "CHARGE".to_string()
-    }
-}

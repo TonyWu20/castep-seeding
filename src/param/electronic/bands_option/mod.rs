@@ -1,8 +1,9 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::ParamDisplay;
 use derive_builder::Builder;
 pub use extra_bands::ExtraBands;
-use nbands::Nbands;
+pub use nbands::Nbands;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
@@ -15,34 +16,32 @@ mod extra_bands;
 /// This is the method used in the CASTEP interface.
 /// Indirectly, by specifying the number of extra bands in addition to the number of occupied bands as a percentage of the latter value using `PERC_EXTRA_BANDS`.
 /// It is not possible to have both the `NBANDS` keyword and either the `NEXTRA_BANDS` or `PERC_EXTRA_BANDS` keywords present in the same input file.
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Builder, Default)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    PartialOrd,
+    Serialize,
+    Deserialize,
+    Builder,
+    Default,
+    ParamDisplay,
+)]
 #[builder(setter(into, strip_option), default)]
 pub struct BandsOption {
     nbands: Option<Nbands>,
     extra_bands: Option<ExtraBands>,
 }
 
-impl Display for BandsOption {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let output = [
-            self.nbands.map(|v| v.output()),
-            self.extra_bands.map(|v| v.output()),
-        ]
-        .into_iter()
-        .flatten()
-        .collect::<Vec<String>>()
-        .join("\n");
-        write!(f, "{output}")
-    }
-}
-
 mod nbands {
+    use crate::param::KeywordDisplay;
     use std::fmt::Display;
 
     use castep_seeding_derive::KeywordDisplay;
     use serde::{Deserialize, Serialize};
 
-    use crate::param::{electronic::spin_polarised::SpinPolarised, KeywordDisplay};
+    use crate::param::{electronic::spin_polarised::SpinPolarised, ElectronicParam};
 
     use super::extra_bands::ExtraBands;
 
@@ -59,14 +58,8 @@ mod nbands {
         Deserialize,
         KeywordDisplay,
     )]
-    #[keyword_display(field = "NBANDS", from = u64)]
+    #[keyword_display(field = "NBANDS", from = u64, value=u64)]
     pub struct Nbands(u64);
-
-    impl Display for Nbands {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "{}", self.0)
-        }
-    }
 
     impl Nbands {
         /// If NEXTRA_BANDS is specified and SPIN_POLARIZED : FALSE:
@@ -83,10 +76,35 @@ mod nbands {
         ///     NBANDS : max(NUP, NDOWN)
         /// If FIX_OCCUPANCY : FALSE, these default values of NBANDS will be multiplied by 1.2.
         pub fn default_value(
+            electronic_param: ElectronicParam,
             spin_polarised: SpinPolarised,
             extra_bands: Option<ExtraBands>,
             // fix_occupancy: FixOccupancy,
         ) -> Self {
+            if let (Some(ExtraBands::NextraBands(nextra)), SpinPolarised::False) =
+                (extra_bands, spin_polarised)
+            {
+                let nelectrons = electronic_param
+                    .nelectrons
+                    .expect("Number of electrons of the system is not determined!");
+                return Self(nelectrons.value() as u64 / 2 + nextra);
+            }
+            if let (Some(ExtraBands::NextraBands(nextra)), SpinPolarised::True) =
+                (extra_bands, spin_polarised)
+            {
+                let nup = electronic_param
+                    .nup
+                    .expect("NUP of the system is not determined!");
+                let ndown = electronic_param
+                    .ndown
+                    .expect("NDOWN of the system is not determined!");
+                let max = if nup.value() > ndown.value() {
+                    nup.value()
+                } else {
+                    ndown.value()
+                };
+                return Self(max as u64 + nextra);
+            }
             todo!()
         }
     }
