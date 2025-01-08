@@ -13,10 +13,7 @@ mod electro_min {
     pub struct ElectroMinimization;
 }
 
-mod electronic {
-    #[derive(Debug, Clone)]
-    pub struct Electronic;
-}
+mod electronic;
 
 mod geom_opt {
     #[derive(Debug, Clone)]
@@ -34,7 +31,7 @@ use std::fmt::Display;
 use band_structure::BandStructure;
 pub use basis_set::*;
 use electro_min::ElectroMinimization;
-use electronic::Electronic;
+use electronic::ElectronicParam;
 pub use general::*;
 use geom_opt::GeomOpt;
 use population::Population;
@@ -50,7 +47,7 @@ pub struct CastepParam {
     band_structure: Option<BandStructure>,
     basis_set: Option<BasisSet>,
     electro_min: Option<ElectroMinimization>,
-    electronic: Option<Electronic>,
+    electronic: Option<ElectronicParam>,
     geom_opt: Option<GeomOpt>,
     xc_correlation: Option<XcParam>,
     population: Option<Population>,
