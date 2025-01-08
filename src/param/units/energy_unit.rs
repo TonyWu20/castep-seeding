@@ -33,8 +33,8 @@ impl Display for EnergyUnit {
         match self {
             EnergyUnit::Hartree => f.write_str("ha"),
             EnergyUnit::Millihartree => f.write_str("mha"),
-            EnergyUnit::ElectronVolt => f.write_str("ev"),
-            EnergyUnit::MillielectronVolt => f.write_str("mev"),
+            EnergyUnit::ElectronVolt => f.write_str("eV"),
+            EnergyUnit::MillielectronVolt => f.write_str("meV"),
             EnergyUnit::Rydberg => f.write_str("ry"),
             EnergyUnit::Millirydberg => f.write_str("mry"),
             EnergyUnit::KilojoulesPerMole => f.write_str("kj/mol"),

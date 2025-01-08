@@ -1,4 +1,5 @@
 use super::KeywordDisplay;
+use castep_seeding_derive::ParamDisplay;
 use derive_builder::Builder;
 use std::fmt::Display;
 
@@ -27,7 +28,7 @@ mod time_unit;
 mod velocity_unit;
 mod volume_unit;
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, Hash, Builder)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, Hash, Builder, ParamDisplay)]
 #[builder(setter(into, strip_option), default)]
 pub struct Units {
     pub energy_unit: Option<EnergyUnit>,
@@ -41,29 +42,6 @@ pub struct Units {
     pub time_unit: Option<TimeUnit>,
     pub velocity_unit: Option<VelocityUnit>,
     pub volume_unit: Option<VolumeUnit>,
-}
-
-impl Display for Units {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let output = [
-            self.energy_unit.map(|v| v.output()),
-            self.force_unit.map(|v| v.output()),
-            self.force_constant_unit.map(|v| v.output()),
-            self.frequency_unit.map(|v| v.output()),
-            self.inv_length_unit.map(|v| v.output()),
-            self.length_unit.map(|v| v.output()),
-            self.mass_unit.map(|v| v.output()),
-            self.pressure_unit.map(|v| v.output()),
-            self.time_unit.map(|v| v.output()),
-            self.velocity_unit.map(|v| v.output()),
-            self.volume_unit.map(|v| v.output()),
-        ]
-        .into_iter()
-        .flatten()
-        .collect::<Vec<String>>()
-        .join("\n");
-        write!(f, "{}", output)
-    }
 }
 
 #[cfg(test)]
