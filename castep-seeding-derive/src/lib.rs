@@ -43,7 +43,7 @@ pub fn derive_param_display(input: TokenStream) -> TokenStream {
         }
     });
     let expanded = quote! {
-        impl Display for #ident {
+        impl std::fmt::Display for #ident {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 let output = [
                     #(#fields, )*
@@ -87,12 +87,12 @@ fn data_enum_display_impl(data_enum: &DataEnum, struct_ident: &Ident) -> proc_ma
             // Don't expect this in enum
             syn::Fields::Named(_) => unimplemented!(),
             syn::Fields::Unnamed(_) => quote! {
-                #struct_ident::#name(t) => write!(f, #display_format, t)},
+            #struct_ident::#name(t) => write!(f, #display_format, t)},
             syn::Fields::Unit => quote! {#struct_ident::#name => write!(f, "{:?}", self)},
         }
     });
     quote! {
-        impl Display for #struct_ident {
+        impl std::fmt::Display for #struct_ident {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 match self {
                     #(#variants,)*
@@ -199,7 +199,7 @@ pub fn derive(input: TokenStream) -> TokenStream {
         match input.data {
             syn::Data::Struct(_) => {
                 quote! {
-                impl Display for #ident {
+                impl std::fmt::Display for #ident {
                     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(f, #expr, self.0)
                     }
@@ -213,7 +213,7 @@ pub fn derive(input: TokenStream) -> TokenStream {
     };
 
     let output = quote! {
-        impl KeywordDisplay for #ident {
+        impl crate::param::KeywordDisplay for #ident {
             #field_text
         }
         #from
