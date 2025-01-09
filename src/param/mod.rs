@@ -8,10 +8,7 @@ mod band_structure {
 }
 mod basis_set;
 
-mod electro_min {
-    #[derive(Debug, Clone)]
-    pub struct ElectroMinimization;
-}
+mod electro_min;
 
 mod electronic;
 
@@ -30,8 +27,8 @@ use std::fmt::Display;
 
 use band_structure::BandStructure;
 pub use basis_set::*;
-use electro_min::ElectroMinimization;
-use electronic::ElectronicParam;
+pub use electro_min::*;
+pub use electronic::*;
 pub use general::*;
 use geom_opt::GeomOpt;
 use population::Population;
