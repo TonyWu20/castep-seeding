@@ -1,4 +1,3 @@
-use std::fmt::Display;
 
 use castep_seeding_derive::ParamDisplay;
 use derive_builder::Builder;
@@ -35,8 +34,8 @@ pub struct BandsOption {
 }
 
 mod nbands {
-    use crate::param::KeywordDisplay;
-    use std::fmt::Display;
+    
+    
 
     use castep_seeding_derive::KeywordDisplay;
     use serde::{Deserialize, Serialize};

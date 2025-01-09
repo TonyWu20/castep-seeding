@@ -1,9 +1,7 @@
-use std::fmt::Display;
 
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-use crate::param::KeywordDisplay;
 
 /// This keyword determines the maximum size of the g-vectors included in the fine grid relative to the standard grid.
 /// # Default

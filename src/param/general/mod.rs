@@ -1,7 +1,6 @@
 use super::KeywordDisplay;
 use castep_seeding_derive::ParamDisplay;
 use serde::{Deserialize, Serialize};
-use std::fmt::Display;
 
 mod backup_setting;
 mod calculate_props;
@@ -27,6 +26,7 @@ pub use castep_task::CastepTask;
 pub use charge_unit::ChargeUnit;
 pub use checkpoint::Checkpoint;
 pub use comment::Comment;
+#[allow(unused_imports)]
 pub use continuation::{Continuation, ContinueReuse, Reuse};
 pub use data_distribution::DataDistribution;
 pub use derive_builder::Builder;
@@ -37,7 +37,7 @@ pub use print_memory_usage::PrintMemoryUsage;
 pub use rand_seed::RandSeed;
 pub use run_time::RunTime;
 pub use stop::Stop;
-pub use write_checkpoint::{WriteCheckpoint, WriteCheckpointOption, WriteCheckpointValue};
+pub use write_checkpoint::*;
 pub use write_props::WriteProperties;
 
 #[derive(Debug, Clone, Default, Hash, Serialize, Deserialize, Builder, ParamDisplay)]

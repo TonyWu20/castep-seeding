@@ -1,9 +1,7 @@
-use std::fmt::Display;
 
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-use crate::param::KeywordDisplay;
 
 /// This keyword determines the size of the standard grid, relative to the diameter of the cutoff sphere.
 /// # Default

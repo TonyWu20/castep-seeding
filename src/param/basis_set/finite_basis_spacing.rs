@@ -4,7 +4,7 @@ use castep_seeding_derive::KeywordDisplay;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
-use crate::param::{EnergyUnit, KeywordDisplay};
+use crate::param::EnergyUnit;
 /// This keyword determines the spacing of cutoff energies used to estimate
 /// the `BasisDeDloge` in automatic calculation of the finite basis set correction.
 /// Points are chosen such that the `CutoffEnergy` corresponds to the highest energy

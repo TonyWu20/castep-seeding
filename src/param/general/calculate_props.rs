@@ -1,5 +1,4 @@
 use crate::param::KeywordDisplay;
-use std::fmt::Display;
 
 use castep_seeding_derive::{KeywordDisplay, ParamDisplay};
 use derive_builder::Builder;

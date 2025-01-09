@@ -1,9 +1,7 @@
-use std::fmt::Display;
 
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-use crate::param::KeywordDisplay;
 
 /// This keyword controls the number of points used to estimate the BASIS_DE_DLOGE in automatic calculation of the finite basis set correction. Points are chosen such that the CUT_OFF_ENERGY corresponds to the highest energy in the set of FINITE_BASIS_NPOINTS cutoff energies.
 /// # Note

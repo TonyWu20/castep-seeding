@@ -1,9 +1,7 @@
-use std::fmt::Display;
 
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-use crate::param::KeywordDisplay;
 
 /// This keywords specifies the precision of the basis set by choosing the level of convergence of atomic energies with respect to the plane wave cutoff energy for the pseudopotentials used in the calculation.
 /// Available options are:

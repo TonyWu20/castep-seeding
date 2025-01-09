@@ -7,7 +7,7 @@ mod band_structure {
     pub struct BandStructure;
 }
 mod basis_set;
-
+mod density_mixing_params;
 mod electro_min;
 
 mod electronic;
@@ -27,6 +27,7 @@ use std::fmt::Display;
 
 use band_structure::BandStructure;
 pub use basis_set::*;
+use density_mixing_params::DensityMixingParams;
 pub use electro_min::*;
 pub use electronic::*;
 pub use general::*;
@@ -43,8 +44,9 @@ pub struct CastepParam {
     pseudopotentials: Option<Pseudopotentials>,
     band_structure: Option<BandStructure>,
     basis_set: Option<BasisSet>,
-    electro_min: Option<ElectroMinimization>,
     electronic: Option<ElectronicParam>,
+    electro_min: Option<ElectroMinimization>,
+    density_mixing: Option<DensityMixingParams>,
     geom_opt: Option<GeomOpt>,
     xc_correlation: Option<XcParam>,
     population: Option<Population>,

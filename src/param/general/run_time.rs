@@ -1,9 +1,7 @@
-use std::fmt::Display;
 
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-use crate::param::KeywordDisplay;
 
 /// This keyword specifies the maximum run time for the job, in seconds. If the RUN_TIME is greater than zero, the job will exit cleanly before the specified time has elapsed, leaving as little unused time as possible.
 /// If RUN_TIME is less than or equal to zero, no time limit will be imposed on the run.

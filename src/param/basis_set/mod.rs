@@ -1,7 +1,6 @@
 use castep_seeding_derive::ParamDisplay;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
-use std::fmt::Display;
 
 mod basis_de_dloge;
 mod basis_precision;
@@ -21,9 +20,7 @@ pub use fine_gmax::FineGMax;
 pub use fine_grid_scale::FineGridScale;
 pub use finite_basis_corr::FiniteBasisCorr;
 pub use finite_basis_npoints::FiniteBasisNPoints;
-pub use finite_basis_spacing::{
-    FiniteBasisSpacing, FiniteBasisSpacingBuilder, FiniteBasisSpacingBuilderError,
-};
+pub use finite_basis_spacing::FiniteBasisSpacing;
 pub use fixed_npw::FixedNPW;
 pub use grid_scale::GridScale;
 

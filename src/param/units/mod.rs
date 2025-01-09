@@ -1,7 +1,6 @@
 use super::KeywordDisplay;
 use castep_seeding_derive::ParamDisplay;
 use derive_builder::Builder;
-use std::fmt::Display;
 
 pub use energy_unit::EnergyUnit;
 pub use force_constant_unit::ForceConstantUnit;

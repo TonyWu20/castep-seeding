@@ -3,7 +3,6 @@ use std::fmt::{Display, Write};
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-use crate::param::KeywordDisplay;
 
 #[derive(
     Debug,

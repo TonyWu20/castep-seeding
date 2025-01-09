@@ -3,7 +3,6 @@ use std::fmt::Display;
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-use crate::param::KeywordDisplay;
 
 /// This keyword determines whether or not to apply a finite basis set correction to energy and stress when cell parameters change.
 /// Available options are:

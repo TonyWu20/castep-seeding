@@ -4,7 +4,7 @@ use castep_seeding_derive::KeywordDisplay;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
-use crate::param::{InvLengthUnit, KeywordDisplay};
+use crate::param::InvLengthUnit;
 
 /// This keyword determines the maximum size of the g-vectors included in the fine grid.
 /// The fine grid is seDefault

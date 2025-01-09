@@ -1,9 +1,6 @@
-use std::fmt::Display;
 
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
-use crate::param::KeywordDisplay;
 
 #[derive(
     Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Default, KeywordDisplay,

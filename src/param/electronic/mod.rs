@@ -1,7 +1,6 @@
 use castep_seeding_derive::ParamDisplay;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
-use std::fmt::Display;
 
 pub use bands_option::*;
 pub use charge::Charge;
