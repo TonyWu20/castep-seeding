@@ -74,6 +74,12 @@ struct EnumAttrs {
     display_format: Option<String>,
 }
 
+#[derive(FromAttributes, Default)]
+#[darling(default, attributes(keyword_display))]
+struct FieldAttrs {
+    is_option: Option<bool>,
+}
+
 fn data_enum_display_impl(data_enum: &DataEnum, struct_ident: &Ident) -> proc_macro2::TokenStream {
     let variants = data_enum.variants.iter().map(|v| {
         let name = &v.ident;
@@ -124,6 +130,51 @@ fn data_enum_field_impl(data_enum: &DataEnum, struct_ident: &Ident) -> proc_macr
             }
         }
     }
+}
+#[proc_macro_derive(KeywordDisplayStruct, attributes(keyword_display))]
+pub fn derive_struct(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input);
+    let opts = Opts::from_derive_input(&input).expect("Wrong option");
+    let DeriveInput { ident, .. } = input;
+    let field = opts.field;
+    let field_text = quote! {
+        fn field(&self) -> String {
+            #field.to_string()
+        }
+    };
+    let fields = match &input.data {
+        syn::Data::Struct(data_struct) => &data_struct.fields,
+        syn::Data::Enum(_) => unimplemented!(),
+        syn::Data::Union(_) => unimplemented!(),
+    };
+    let formatted_fields = fields.iter().map(|f| {
+        let opts = FieldAttrs::from_attributes(&f.attrs).expect("Wrong attrs");
+        let ident = f
+            .ident
+            .as_ref()
+            .expect("Tuple struct does not have named field");
+        if let Some(true) = opts.is_option {
+            quote! {self.#ident.map(|v| v.output()).unwrap_or_default()}
+        } else {
+            quote! {self.#ident}
+        }
+    });
+    let expr = opts.display_format.unwrap_or("{}".to_string());
+    let display_impl = quote! {
+    use crate::param::KeywordDisplay;
+    impl std::fmt::Display for #ident {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, #expr, #(#formatted_fields), *)
+        }
+    }
+    };
+    let output = quote! {
+        impl crate::param::KeywordDisplay for #ident {
+            #field_text
+        }
+        #display_impl
+    };
+    output.into()
 }
 
 #[proc_macro_derive(KeywordDisplay, attributes(keyword_display))]
