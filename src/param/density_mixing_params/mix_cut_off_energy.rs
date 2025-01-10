@@ -1,4 +1,5 @@
 use castep_seeding_derive::KeywordDisplayStruct;
+use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
 use crate::param::EnergyUnit;
@@ -12,7 +13,16 @@ use crate::param::EnergyUnit;
 /// # Example
 /// `MIX_CUT_OFF_ENERGY : 250.0 eV`
 #[derive(
-    Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Default, KeywordDisplayStruct,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    PartialOrd,
+    Serialize,
+    Deserialize,
+    Default,
+    KeywordDisplayStruct,
+    Builder,
 )]
 #[keyword_display(field = "MIX_CUT_OFF_ENERGY", display_format = "{:20.15} {}")]
 pub struct MixCutOffEnergy {

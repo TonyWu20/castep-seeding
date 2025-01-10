@@ -13,12 +13,12 @@ mod mix_spin_gmax;
 mod mixing_scheme;
 
 pub use mix_charge_amp::MixChargeAmp;
-pub use mix_charge_gmax::MixChargeGmax;
-pub use mix_cut_off_energy::MixCutOffEnergy;
+pub use mix_charge_gmax::*;
+pub use mix_cut_off_energy::*;
 pub use mix_history_length::MixHistoryLength;
-pub use mix_metric_q::MixMetricQ;
+pub use mix_metric_q::*;
 pub use mix_spin_amp::MixSpinAmp;
-pub use mix_spin_gmax::MixSpinGmax;
+pub use mix_spin_gmax::*;
 pub use mixing_scheme::MixingScheme;
 
 #[derive(Debug, Clone, Copy, Builder, Default, ParamDisplay, Serialize, Deserialize)]
@@ -36,7 +36,7 @@ pub struct DensityMixingParams {
 
 #[cfg(test)]
 mod test {
-    use super::{DensityMixingParamsBuilder, MixChargeGmax, MixSpinAmp, MixSpinGmax, MixingScheme};
+    use super::{DensityMixingParamsBuilder, MixChargeGmax, MixSpinGmax, MixingScheme};
 
     #[test]
     fn dm_param() {

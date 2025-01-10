@@ -1,10 +1,11 @@
 use castep_seeding_derive::KeywordDisplayStruct;
+use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
 use crate::param::InvLengthUnit;
 
 #[derive(
-    Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, KeywordDisplayStruct,
+    Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, KeywordDisplayStruct, Builder,
 )]
 #[keyword_display(field = "MIX_SPIN_GMAX", display_format = "{:20.15} {}")]
 /// This keyword determines the maximum g-vector at which the spin density is

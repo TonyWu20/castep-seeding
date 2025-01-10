@@ -1,10 +1,11 @@
 use castep_seeding_derive::KeywordDisplayStruct;
+use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
 use crate::param::InvLengthUnit;
 
 #[derive(
-    Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, KeywordDisplayStruct,
+    Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, KeywordDisplayStruct, Builder,
 )]
 #[keyword_display(field = "MIX_METRIC_Q", display_format = "{} {}")]
 /// This keyword determines the weighting factor for the densities used in
