@@ -16,8 +16,8 @@ Generate `castep` seed files
   - [x] Pseudopotentials
   - [x] Basis set parameters
   - [x] Electronic parameters (partially completed)
-  - [ ] Electronic minimization parameters
-  - [ ] Density mixing parameters
+  - [x] Electronic minimization parameters
+  - [x] Density mixing parameters
   - [ ] Population analysis
   - [ ] Geometry optimization parameters
   - [ ] Band structure parameters
