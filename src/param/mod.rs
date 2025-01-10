@@ -17,22 +17,19 @@ mod geom_opt {
     pub struct GeomOpt;
 }
 
+mod population_analysis;
 mod xc_correlation;
-mod population {
-    #[derive(Debug, Clone)]
-    pub struct Population;
-}
 
 use std::fmt::Display;
 
 use band_structure::BandStructure;
 pub use basis_set::*;
-use density_mixing_params::DensityMixingParams;
+pub use density_mixing_params::*;
 pub use electro_min::*;
 pub use electronic::*;
 pub use general::*;
 use geom_opt::GeomOpt;
-use population::Population;
+pub use population_analysis::*;
 pub use pseudopotentials::*;
 pub use units::*;
 use xc_correlation::XcParam;
@@ -47,9 +44,9 @@ pub struct CastepParam {
     electronic: Option<ElectronicParam>,
     electro_min: Option<ElectroMinimization>,
     density_mixing: Option<DensityMixingParams>,
+    population_analysis: Option<PopulationAnalysis>,
     geom_opt: Option<GeomOpt>,
     xc_correlation: Option<XcParam>,
-    population: Option<Population>,
 }
 
 pub trait KeywordDisplay: Display {
