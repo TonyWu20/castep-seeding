@@ -9,14 +9,8 @@ mod band_structure {
 mod basis_set;
 mod density_mixing_params;
 mod electro_min;
-
 mod electronic;
-
-mod geom_opt {
-    #[derive(Debug, Clone)]
-    pub struct GeomOpt;
-}
-
+mod geom_opt;
 mod population_analysis;
 mod xc_correlation;
 
@@ -28,7 +22,7 @@ pub use density_mixing_params::*;
 pub use electro_min::*;
 pub use electronic::*;
 pub use general::*;
-use geom_opt::GeomOpt;
+pub use geom_opt::GeomOpt::*;
 pub use population_analysis::*;
 pub use pseudopotentials::*;
 pub use units::*;

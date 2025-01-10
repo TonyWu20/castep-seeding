@@ -18,8 +18,8 @@ Generate `castep` seed files
   - [x] Electronic parameters (partially completed)
   - [x] Electronic minimization parameters
   - [x] Density mixing parameters
-  - [ ] Population analysis
-  - [ ] Geometry optimization parameters
+  - [x] Population analysis
+  - [x] Geometry optimization parameters
   - [ ] Band structure parameters
   - [ ] Molecular dynamics
   - [ ] Optics
