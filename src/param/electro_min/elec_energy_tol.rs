@@ -1,15 +1,13 @@
-use std::fmt::Display;
-
-use castep_seeding_derive::KeywordDisplay;
+use castep_seeding_derive::KeywordDisplayStruct;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
 use crate::param::EnergyUnit;
 
 #[derive(
-    Debug, Clone, Copy, Serialize, Deserialize, PartialEq, PartialOrd, KeywordDisplay, Builder,
+    Debug, Clone, Copy, Serialize, Deserialize, PartialEq, PartialOrd, KeywordDisplayStruct, Builder,
 )]
-#[keyword_display(field = "ELEC_ENERGY_TOL", direct_display = false)]
+#[keyword_display(field = "ELEC_ENERGY_TOL", display_format = "{:20.15} {}", from=f64, default_value=1e-5 )]
 #[builder(setter(into), default)]
 /// This keyword controls the tolerance for accepting convergence of the total
 /// energy in an electronic minimization.
@@ -20,34 +18,6 @@ use crate::param::EnergyUnit;
 /// 1x10-5 eV per atom
 pub struct ElecEnergyTol {
     pub tol: f64,
+    #[keyword_display(is_option = true)]
     pub unit: Option<EnergyUnit>,
-}
-
-impl Display for ElecEnergyTol {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{:20.15e} {}",
-            self.tol,
-            self.unit.map(|v| v.to_string()).unwrap_or_default()
-        )
-    }
-}
-
-impl Default for ElecEnergyTol {
-    fn default() -> Self {
-        Self {
-            tol: 1e-5,
-            unit: None,
-        }
-    }
-}
-
-impl From<f64> for ElecEnergyTol {
-    fn from(value: f64) -> Self {
-        Self {
-            tol: value,
-            ..Default::default()
-        }
-    }
 }

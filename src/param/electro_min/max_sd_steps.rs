@@ -14,14 +14,8 @@ use super::ElectronicMinimizer;
 #[derive(
     Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, KeywordDisplay,
 )]
-#[keyword_display(field="MAX_SD_STEPS", from=u32,value= u32)]
+#[keyword_display(field="MAX_SD_STEPS", from=u32,value= u32, default_value=1)]
 pub struct MaxSdSteps(u32);
-
-impl Default for MaxSdSteps {
-    fn default() -> Self {
-        Self(1)
-    }
-}
 
 impl MaxSdSteps {
     fn default_value(electronic_minimizer: ElectronicMinimizer) -> Self {

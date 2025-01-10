@@ -1,7 +1,5 @@
-
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
 
 /// This keyword determines the maximum size of the g-vectors included in the fine grid relative to the standard grid.
 /// # Default
@@ -15,5 +13,16 @@ pub struct FineGridScale(f64);
 impl Default for FineGridScale {
     fn default() -> Self {
         Self(1.0)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::FineGridScale;
+
+    #[test]
+    fn fine_grid_scale() {
+        let p = FineGridScale::default();
+        println!("{p}")
     }
 }

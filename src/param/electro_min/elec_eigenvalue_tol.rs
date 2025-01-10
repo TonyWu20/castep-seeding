@@ -1,6 +1,4 @@
-use std::fmt::Display;
-
-use castep_seeding_derive::KeywordDisplay;
+use castep_seeding_derive::KeywordDisplayStruct;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
@@ -9,10 +7,10 @@ use crate::param::{EnergyUnit, Nbands};
 use super::ElecEnergyTol;
 
 #[derive(
-    Debug, Clone, Copy, Deserialize, Serialize, PartialEq, PartialOrd, Builder, KeywordDisplay,
+    Debug, Clone, Copy, Deserialize, Serialize, PartialEq, PartialOrd, Builder, KeywordDisplayStruct,
 )]
 #[builder(setter(into), default)]
-#[keyword_display(field = "ELEC_EIGENVALUE_TOL", direct_display = false)]
+#[keyword_display(field = "ELEC_EIGENVALUE_TOL", display_format = "{:20.15e} {}", from=f64, default_value=1e-6)]
 /// This keyword controls the tolerance for accepting convergence of a single
 /// eigenvalue during density mixing minimization.
 /// The difference between maximum and minimum eigenvalues over ELEC_CONVERGENCE_WIN
@@ -21,27 +19,8 @@ use super::ElecEnergyTol;
 /// The default value is the lower of 1x10-6 eV and ELEC_ENERGY_TOL*NATOMS/NBANDS, where NATOMS is the total number of atoms in the unit cell.
 pub struct ElecEigenvalueTol {
     pub tol: f64,
+    #[keyword_display(is_option = true)]
     pub unit: Option<EnergyUnit>,
-}
-
-impl Default for ElecEigenvalueTol {
-    fn default() -> Self {
-        Self {
-            tol: 1e-6,
-            unit: Default::default(),
-        }
-    }
-}
-
-impl Display for ElecEigenvalueTol {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{:20.15} {}",
-            self.tol,
-            self.unit.map(|v| v.to_string()).unwrap_or_default()
-        )
-    }
 }
 
 impl ElecEigenvalueTol {
@@ -54,11 +33,15 @@ impl ElecEigenvalueTol {
     }
 }
 
-impl From<f64> for ElecEigenvalueTol {
-    fn from(value: f64) -> Self {
-        Self {
-            tol: value,
-            ..Default::default()
-        }
+#[cfg(test)]
+mod test {
+    use crate::param::KeywordDisplay;
+
+    use super::ElecEigenvalueTol;
+
+    #[test]
+    fn elec_eigenvalue_tol() {
+        let p = ElecEigenvalueTol::default();
+        println!("{}", p.output())
     }
 }

@@ -1,7 +1,5 @@
-
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
 
 #[derive(
     Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, KeywordDisplay,

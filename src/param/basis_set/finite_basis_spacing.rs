@@ -1,6 +1,4 @@
-use std::fmt::Display;
-
-use castep_seeding_derive::KeywordDisplay;
+use castep_seeding_derive::KeywordDisplayStruct;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
@@ -12,31 +10,12 @@ use crate::param::EnergyUnit;
 /// # Note
 /// This value is only used if FINITE_BASIS_CORR : 2.
 #[derive(
-    Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Builder, KeywordDisplay,
+    Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Builder, KeywordDisplayStruct,
 )]
 #[builder(setter(into), default)]
-#[keyword_display(field = "FINITE_BASIS_SPACING", direct_display = false)]
+#[keyword_display(field = "FINITE_BASIS_SPACING", from=f64, default_value=5.0, display_format="{:20.15} {}")]
 pub struct FiniteBasisSpacing {
     spacing: f64,
+    #[keyword_display(is_option = true)]
     unit: Option<EnergyUnit>,
-}
-
-impl Default for FiniteBasisSpacing {
-    fn default() -> Self {
-        Self {
-            spacing: 5.0,
-            unit: None,
-        }
-    }
-}
-
-impl Display for FiniteBasisSpacing {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{:20.15} {}",
-            self.spacing,
-            self.unit.map(|v| v.to_string()).unwrap_or_default()
-        )
-    }
 }

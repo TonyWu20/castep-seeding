@@ -65,6 +65,7 @@ struct Opts {
     from: Option<Ident>,
     value: Option<Ident>,
     borrowed_value: Option<Ident>,
+    default_value: Option<Expr>,
 }
 
 #[derive(FromAttributes, Default)]
@@ -72,12 +73,6 @@ struct Opts {
 struct EnumAttrs {
     field: String,
     display_format: Option<String>,
-}
-
-#[derive(FromAttributes, Default)]
-#[darling(default, attributes(keyword_display))]
-struct FieldAttrs {
-    is_option: Option<bool>,
 }
 
 fn data_enum_display_impl(data_enum: &DataEnum, struct_ident: &Ident) -> proc_macro2::TokenStream {
@@ -131,6 +126,13 @@ fn data_enum_field_impl(data_enum: &DataEnum, struct_ident: &Ident) -> proc_macr
         }
     }
 }
+
+#[derive(FromAttributes, Default)]
+#[darling(default, attributes(keyword_display))]
+struct FieldAttrs {
+    is_option: Option<bool>,
+}
+
 #[proc_macro_derive(KeywordDisplayStruct, attributes(keyword_display))]
 pub fn derive_struct(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input);
@@ -168,11 +170,65 @@ pub fn derive_struct(input: TokenStream) -> TokenStream {
         }
     }
     };
+    let derive_from = match opts.from {
+        Some(x) => {
+            let field_values = fields.iter().map(|f| {
+                let opts = FieldAttrs::from_attributes(&f.attrs).expect("Wrong attrs");
+                let ident = f
+                    .ident
+                    .as_ref()
+                    .expect("Tuple struct does not have named field");
+                if let Some(true) = opts.is_option {
+                    quote! {#ident: Default::default()}
+                } else {
+                    quote! {#ident: value }
+                }
+            });
+            quote! {
+            impl From<#x> for #ident {
+                fn from(value: #x) -> #ident {
+                        #ident {
+                        #(#field_values), *
+                    }
+                }
+            }
+            }
+        }
+        None => quote! {},
+    };
+
+    let default = if let Some(x) = opts.default_value {
+        let field_values = fields.iter().map(|f| {
+            let opts = FieldAttrs::from_attributes(&f.attrs).expect("Wrong attrs");
+            let ident = f
+                .ident
+                .as_ref()
+                .expect("Tuple struct does not have named field");
+            if let Some(true) = opts.is_option {
+                quote! {#ident: Default::default()}
+            } else {
+                quote! {#ident: #x }
+            }
+        });
+        quote! {
+        impl Default for #ident {
+            fn default() -> #ident {
+                #ident {
+                    #(#field_values), *
+                }
+            }
+        }
+        }
+    } else {
+        quote! {}
+    };
     let output = quote! {
         impl crate::param::KeywordDisplay for #ident {
             #field_text
         }
         #display_impl
+        #derive_from
+        #default
     };
     output.into()
 }

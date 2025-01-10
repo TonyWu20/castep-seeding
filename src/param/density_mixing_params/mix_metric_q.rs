@@ -7,7 +7,7 @@ use crate::param::InvLengthUnit;
 #[derive(
     Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, KeywordDisplayStruct, Builder,
 )]
-#[keyword_display(field = "MIX_METRIC_Q", display_format = "{} {}")]
+#[keyword_display(field = "MIX_METRIC_Q", display_format = "{} {}", from=f64, default_value=-1.0)]
 /// This keyword determines the weighting factor for the densities used in
 /// the density mixing scheme.
 /// CASTEP uses a weighting factor when evaluating scalar products of densities.
@@ -25,15 +25,6 @@ pub struct MixMetricQ {
     pub unit: Option<InvLengthUnit>,
 }
 
-impl Default for MixMetricQ {
-    fn default() -> Self {
-        Self {
-            q: -1.0,
-            unit: Default::default(),
-        }
-    }
-}
-
 #[cfg(test)]
 mod test {
     use crate::param::KeywordDisplay;
@@ -43,6 +34,8 @@ mod test {
     #[test]
     fn mix_metric_q() {
         let q = MixMetricQ::default();
+        println!("{}", q.output());
+        let q = MixMetricQ::from(20.0);
         println!("{}", q.output());
     }
 }

@@ -1,7 +1,5 @@
-
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
 
 /// This keyword determines the size of the standard grid, relative to the diameter of the cutoff sphere.
 /// # Default
@@ -12,12 +10,7 @@ use serde::{Deserialize, Serialize};
 #[keyword_display(field="GRID_SCALE",
     from=f64,
     value=f64,
-    display_format="{:20.15}"
+    display_format="{:20.15}",
+    default_value=1.75
 )]
 pub struct GridScale(f64);
-
-impl Default for GridScale {
-    fn default() -> Self {
-        Self(1.75)
-    }
-}

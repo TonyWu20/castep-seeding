@@ -22,7 +22,7 @@ pub use density_mixing_params::*;
 pub use electro_min::*;
 pub use electronic::*;
 pub use general::*;
-pub use geom_opt::GeomOpt::*;
+pub use geom_opt::*;
 pub use population_analysis::*;
 pub use pseudopotentials::*;
 pub use units::*;

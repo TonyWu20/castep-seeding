@@ -1,32 +1,16 @@
-use std::fmt::Display;
-
+use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Hash)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Hash, KeywordDisplay,
+)]
+#[keyword_display(field="NLXC_EXCHANGE_REFLECT_KPTS", from=bool,value=bool)]
 pub struct ExchangeReflectKpts(bool);
 
 impl Default for ExchangeReflectKpts {
     fn default() -> Self {
         Self(true)
-    }
-}
-
-impl From<bool> for ExchangeReflectKpts {
-    fn from(value: bool) -> Self {
-        Self(value)
-    }
-}
-
-impl Display for ExchangeReflectKpts {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl KeywordDisplay for ExchangeReflectKpts {
-    fn field(&self) -> String {
-        "NLXC_EXCHANGE_REFLECT_KPTS".to_string()
     }
 }
