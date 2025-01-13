@@ -20,7 +20,7 @@ Generate `castep` seed files
   - [x] Density mixing parameters
   - [x] Population analysis
   - [x] Geometry optimization parameters
-  - [ ] Band structure parameters
+  - [x] Band structure parameters
   - [ ] Molecular dynamics
   - [ ] Optics
   - [ ] Transition state search

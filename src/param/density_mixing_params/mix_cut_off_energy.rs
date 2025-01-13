@@ -24,7 +24,7 @@ use crate::param::EnergyUnit;
     KeywordDisplayStruct,
     Builder,
 )]
-#[keyword_display(field = "MIX_CUT_OFF_ENERGY", display_format = "{:20.15} {}")]
+#[keyword_display(field = "MIX_CUT_OFF_ENERGY", display_format = "{:20.15} {}", from=f64)]
 pub struct MixCutOffEnergy {
     pub cutoff_energy: f64,
     #[keyword_display(is_option = true)]

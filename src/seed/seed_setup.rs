@@ -4,12 +4,15 @@ use castep_cell_io::{
         FixAllCell, FixCom, IonicConstraintsBlock, KpointMPSpacing, KpointSettings,
         NCKpointSettings, SpeciesLCAOStatesBlock, SpeciesMassBlock, SpeciesPotBlock,
     },
-    CastepParams, CastepTask, EnergyCutoff, EnergyCutoffError, InvLengthUnit,
+    CastepTask, EnergyCutoff, EnergyCutoffError, InvLengthUnit,
 };
 
 use castep_periodic_table::data::ELEMENT_TABLE;
 use castep_periodic_table::element::LookupElement;
 use std::path::Path;
+
+use crate::{param::CastepParam, SeedingErrors};
+
 pub trait CellBuilding {
     fn geom_opt_cell_template(template_cell: &CellDocument) -> CellDocument {
         let elements = template_cell.get_elements();
@@ -90,7 +93,7 @@ pub trait ParamBuilding {
         &self,
         template_cell: &CellDocument,
         castep_task: CastepTask,
-    ) -> Result<CastepParams, EnergyCutoffError>;
+    ) -> Result<CastepParam, SeedingErrors>;
 
     #[cfg(feature = "template")]
     fn geom_opt_param_template<P: AsRef<Path>>(
@@ -99,8 +102,10 @@ pub trait ParamBuilding {
         energy_cutoff: EnergyCutoff,
         use_edft: bool,
         potentials_loc: P,
-    ) -> Result<CastepParams, EnergyCutoffError> {
+    ) -> Result<crate::param::CastepParam, crate::SeedingErrors> {
         use castep_periodic_table::element::ElementFamily;
+
+        use crate::param::{CastepParam, MetalsMethod, NumOccCycles};
 
         {
             let use_edft = if use_edft {
@@ -113,23 +118,31 @@ pub trait ParamBuilding {
             } else {
                 false
             };
-            Ok(CastepParams::geom_opt(
+            let mut param = CastepParam::geom_opt_param_template(
                 self.cutoff_energy(template_cell, energy_cutoff, potentials_loc)?,
-                template_cell.total_spin(),
-                use_edft,
-            ))
+                template_cell.total_spin().into(),
+            )?;
+            if use_edft {
+                if let Some(electro_min) = param.electro_min.as_mut() {
+                    electro_min.metals_method = Some(MetalsMethod::EDFT);
+                    electro_min.num_occ_cycles = Some(NumOccCycles::from(6));
+                }
+            }
+            Ok(param)
         }
     }
 
     #[cfg(feature = "template")]
-    fn bs_param_template<P: AsRef<Path>>(
+    fn dos_param_template<P: AsRef<Path>>(
         &self,
         template_cell: &CellDocument,
         energy_cutoff: EnergyCutoff,
         use_edft: bool,
         potentials_loc: P,
-    ) -> Result<CastepParams, EnergyCutoffError> {
+    ) -> Result<crate::param::CastepParam, crate::SeedingErrors> {
         use castep_periodic_table::element::ElementFamily;
+
+        use crate::param::{CastepParam, MetalsMethod, NumOccCycles};
 
         let use_edft = if use_edft {
             template_cell.get_elements().iter().any(|elm| {
@@ -142,10 +155,16 @@ pub trait ParamBuilding {
             false
         };
 
-        Ok(CastepParams::band_structure(
+        let mut param = CastepParam::dos_opt_param_template(
             self.cutoff_energy(template_cell, energy_cutoff, potentials_loc)?,
-            template_cell.total_spin(),
-            use_edft,
-        ))
+            template_cell.total_spin().into(),
+        )?;
+        if use_edft {
+            if let Some(electro_min) = param.electro_min.as_mut() {
+                electro_min.metals_method = Some(MetalsMethod::EDFT);
+                electro_min.num_occ_cycles = Some(NumOccCycles::from(6));
+            }
+        }
+        Ok(param)
     }
 }

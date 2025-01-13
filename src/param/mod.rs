@@ -1,4 +1,9 @@
 #![allow(dead_code)]
+use std::fmt::Display;
+
+use band_structure::BandStructure;
+use castep_seeding_derive::ParamDisplay;
+
 mod band_structure;
 mod basis_set;
 mod density_mixing_params;
@@ -8,14 +13,12 @@ mod general;
 mod geom_opt;
 mod population_analysis;
 mod pseudopotentials;
+#[cfg(feature = "template")]
+mod template;
 mod units;
 mod xc_correlation;
 
-use std::fmt::Display;
-
-use band_structure::BandStructure;
 pub use basis_set::*;
-use castep_seeding_derive::ParamDisplay;
 pub use density_mixing_params::*;
 pub use electro_min::*;
 pub use electronic::*;
@@ -26,23 +29,26 @@ pub use pseudopotentials::*;
 pub use units::*;
 pub use xc_correlation::*;
 
-#[derive(Debug, Clone, ParamDisplay)]
+#[derive(
+    Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize, ParamDisplay, Builder, Default,
+)]
 #[param_display(use_display = true)]
+#[builder(setter(strip_option), default)]
 pub struct CastepParam {
     #[param_display(use_ref = true)]
-    general_keywords: Option<General>,
-    units: Option<Units>,
-    pseudopotentials: Option<Pseudopotentials>,
-    band_structure: Option<BandStructure>,
-    basis_set: Option<BasisSet>,
-    electronic: Option<ElectronicParam>,
+    pub general_keywords: Option<General>,
+    pub units: Option<Units>,
+    pub pseudopotentials: Option<Pseudopotentials>,
+    pub band_structure: Option<BandStructure>,
+    pub basis_set: Option<BasisSet>,
+    pub electronic: Option<ElectronicParam>,
     #[param_display(use_ref = true)]
-    electro_min: Option<ElectroMinimization>,
-    density_mixing: Option<DensityMixingParams>,
-    population_analysis: Option<PopulationAnalysis>,
-    geom_opt: Option<GeomOpt>,
+    pub electro_min: Option<ElectroMinimization>,
+    pub density_mixing: Option<DensityMixingParams>,
+    pub population_analysis: Option<PopulationAnalysis>,
+    pub geom_opt: Option<GeomOpt>,
     #[param_display(use_ref = true)]
-    xc_correlation: Option<XcParam>,
+    pub xc_correlation: Option<XcParam>,
 }
 
 pub trait KeywordDisplay: Display {

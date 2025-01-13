@@ -16,29 +16,40 @@ mod nelectrons;
 mod spin;
 mod spin_polarised;
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, Builder, ParamDisplay)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    Serialize,
+    Deserialize,
+    Default,
+    Builder,
+    ParamDisplay,
+    PartialEq,
+    PartialOrd,
+)]
 #[non_exhaustive]
 #[builder(setter(into, strip_option), default)]
 /// `Electronic parameters` section of castep `.param`
 pub struct ElectronicParam {
-    charge: Option<Charge>,
+    pub charge: Option<Charge>,
     #[param_display(display=to_string())]
-    bands_option: Option<BandsOption>,
-    spin_polarised: Option<SpinPolarised>,
-    nelectrons: Option<NElectrons>,
-    nup: Option<NUp>,
-    ndown: Option<NDown>,
-    spin: Option<Spin>, // SEDC_APPLY
-                        // SEDC_D_G06
-                        // SEDC_D_JCHS
-                        // SEDC_D_TS
-                        // SEDC_LAMBDA_OBS
-                        // SEDC_N_OBS
-                        // SEDC_S6_G06
-                        // SEDC_S6_JCHS
-                        // SEDC_SR_JCHS
-                        // SEDC_SR_TS
-                        // SEDC_SCHEME
+    pub bands_option: Option<BandsOption>,
+    pub spin_polarised: Option<SpinPolarised>,
+    pub nelectrons: Option<NElectrons>,
+    pub nup: Option<NUp>,
+    pub ndown: Option<NDown>,
+    pub spin: Option<Spin>, // SEDC_APPLY
+                            // SEDC_D_G06
+                            // SEDC_D_JCHS
+                            // SEDC_D_TS
+                            // SEDC_LAMBDA_OBS
+                            // SEDC_N_OBS
+                            // SEDC_S6_G06
+                            // SEDC_S6_JCHS
+                            // SEDC_SR_JCHS
+                            // SEDC_SR_TS
+                            // SEDC_SCHEME
 }
 
 #[cfg(test)]

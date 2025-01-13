@@ -14,15 +14,17 @@ pub use spin_polarised::SpinPolarised;
 pub use xc_definition::*;
 pub use xc_functional::XCFunctional;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Default, Builder, ParamDisplay)]
+#[derive(
+    Debug, Clone, Serialize, Deserialize, Default, Builder, ParamDisplay, PartialEq, PartialOrd,
+)]
 #[builder(setter(into, strip_option), default)]
 pub struct XcParam {
-    xc_functional: Option<XCFunctional>,
+    pub xc_functional: Option<XCFunctional>,
     #[param_display(use_ref=true, display=to_string())]
-    xc_definition: Option<XCDefinition>,
-    spin_polarised: Option<SpinPolarised>,
+    pub xc_definition: Option<XCDefinition>,
+    pub spin_polarised: Option<SpinPolarised>,
     #[param_display(display=to_string())]
-    nlxc_options: Option<NLXCOptions>,
+    pub nlxc_options: Option<NLXCOptions>,
 }
 
 #[cfg(test)]

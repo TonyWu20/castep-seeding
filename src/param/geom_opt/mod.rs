@@ -41,17 +41,17 @@ pub use geom_stress_tol::*;
 )]
 #[builder(setter(into, strip_option), default)]
 pub struct GeomOpt {
-    geom_convergence_win: Option<GeomConvergenceWin>,
-    geom_disp_tol: Option<GeomDispTol>,
-    geom_energy_tol: Option<GeomEnergyTol>,
-    geom_force_tol: Option<GeomForceTol>,
-    geom_frequency_est: Option<GeomFrequencyEst>,
-    geom_max_iter: Option<GeomMaxIter>,
-    geom_method: Option<GeomMethod>,
-    geom_modulus_est: Option<GeomModulusEst>,
-    geom_preconditioner: Option<GeomPreconditioner>,
-    geom_spin_fix: Option<GeomSpinFix>,
-    geom_stress_tol: Option<GeomStressTol>,
+    pub geom_convergence_win: Option<GeomConvergenceWin>,
+    pub geom_disp_tol: Option<GeomDispTol>,
+    pub geom_energy_tol: Option<GeomEnergyTol>,
+    pub geom_force_tol: Option<GeomForceTol>,
+    pub geom_frequency_est: Option<GeomFrequencyEst>,
+    pub geom_max_iter: Option<GeomMaxIter>,
+    pub geom_method: Option<GeomMethod>,
+    pub geom_modulus_est: Option<GeomModulusEst>,
+    pub geom_preconditioner: Option<GeomPreconditioner>,
+    pub geom_spin_fix: Option<GeomSpinFix>,
+    pub geom_stress_tol: Option<GeomStressTol>,
 }
 
 #[cfg(test)]

@@ -32,9 +32,9 @@ mod relativistic_treatment;
     build_fn(validate = "Self::validate")
 )]
 pub struct Pseudopotentials {
-    pspot_beta_phi_type: Option<PSPotBetaPhiType>,
-    pspot_nonlocal_type: Option<PSPotNonlocalType>,
-    relativistic_treatment: Option<RelativisticTreatment>,
+    pub pspot_beta_phi_type: Option<PSPotBetaPhiType>,
+    pub pspot_nonlocal_type: Option<PSPotNonlocalType>,
+    pub relativistic_treatment: Option<RelativisticTreatment>,
 }
 
 impl Display for Pseudopotentials {

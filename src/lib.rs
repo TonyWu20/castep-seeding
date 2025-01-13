@@ -12,11 +12,11 @@ pub use seed::seed_setup::{CellBuilding, ParamBuilding};
 
 #[cfg(test)]
 mod test {
+    use crate::param::CastepParam;
     /// Example Usage
     use crate::CellBuilding;
     use crate::ParamBuilding;
     use castep_cell_io::cell_document::{CellDocument, KpointQuality};
-    use castep_cell_io::{CastepParams, EnergyCutoffError};
     use std::path::{Path, PathBuf};
 
     use crate::{
@@ -113,9 +113,9 @@ mod test {
             &self,
             template_cell: &CellDocument,
             castep_task: castep_cell_io::CastepTask,
-        ) -> Result<CastepParams, EnergyCutoffError> {
+        ) -> Result<CastepParam, SeedingErrors> {
             match castep_task {
-                castep_cell_io::CastepTask::BandStructure => self.bs_param_template(
+                castep_cell_io::CastepTask::BandStructure => self.dos_param_template(
                     template_cell,
                     castep_cell_io::EnergyCutoff::Ultrafine,
                     self.use_edft,

@@ -4,8 +4,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::{error::SeedingErrors, CellBuilding, ParamBuilding};
-use castep_cell_io::{cell_document::CellDocument, CastepParams, CastepTask};
+use crate::{error::SeedingErrors, param::CastepParam, CellBuilding, ParamBuilding};
+use castep_cell_io::{cell_document::CellDocument, CastepTask};
 use castep_periodic_table::{data::ELEMENT_TABLE, element::LookupElement};
 
 /// A trait of how to create seed file folders.
@@ -38,7 +38,7 @@ pub trait SeedFolder {
         &self,
         castep_task: CastepTask,
         builder: &impl ParamBuilding,
-    ) -> Result<CastepParams, SeedingErrors> {
+    ) -> Result<CastepParam, SeedingErrors> {
         Ok(builder.build_param_for_task(self.cell_template(), castep_task)?)
     }
     /// To use this, required psuedopotential files must be copied to the root dir first.

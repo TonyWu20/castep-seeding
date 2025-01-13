@@ -1,9 +1,9 @@
-
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-
-#[derive(Debug, Clone, Hash, Serialize, Deserialize, KeywordDisplay)]
+#[derive(
+    Debug, Clone, Hash, Serialize, Deserialize, KeywordDisplay, PartialEq, Eq, PartialOrd, Ord,
+)]
 #[keyword_display(specified_fields = true)]
 pub enum ContinueReuse {
     #[keyword_display(field = "CONTINUATION")]

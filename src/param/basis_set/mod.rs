@@ -26,23 +26,34 @@ pub use grid_scale::GridScale;
 
 use super::KeywordDisplay;
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, Builder, ParamDisplay)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    Serialize,
+    Deserialize,
+    Default,
+    Builder,
+    ParamDisplay,
+    PartialEq,
+    PartialOrd,
+)]
 #[builder(
     setter(into, strip_option),
     default,
     build_fn(validate = "Self::validate")
 )]
 pub struct BasisSet {
-    basis_de_dloge: Option<BasisDeDloge>,
-    basis_precision: Option<BasisPrecision>,
-    cut_off_energy: Option<CutoffEnergy>,
-    fine_gmax: Option<FineGMax>,
-    fine_grid_scale: Option<FineGridScale>,
-    finite_basis_corr: Option<FiniteBasisCorr>,
-    finite_basis_npoints: Option<FiniteBasisNPoints>,
-    finite_basis_spacing: Option<FiniteBasisSpacing>,
-    fixed_npw: Option<FixedNPW>,
-    grid_scale: Option<GridScale>,
+    pub basis_de_dloge: Option<BasisDeDloge>,
+    pub basis_precision: Option<BasisPrecision>,
+    pub cut_off_energy: Option<CutoffEnergy>,
+    pub fine_gmax: Option<FineGMax>,
+    pub fine_grid_scale: Option<FineGridScale>,
+    pub finite_basis_corr: Option<FiniteBasisCorr>,
+    pub finite_basis_npoints: Option<FiniteBasisNPoints>,
+    pub finite_basis_spacing: Option<FiniteBasisSpacing>,
+    pub fixed_npw: Option<FixedNPW>,
+    pub grid_scale: Option<GridScale>,
 }
 
 impl BasisSetBuilder {

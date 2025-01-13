@@ -27,7 +27,21 @@ mod time_unit;
 mod velocity_unit;
 mod volume_unit;
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, Hash, Builder, ParamDisplay)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Serialize,
+    Deserialize,
+    Default,
+    Hash,
+    Builder,
+    ParamDisplay,
+)]
 #[builder(setter(into, strip_option), default)]
 pub struct Units {
     pub energy_unit: Option<EnergyUnit>,

@@ -21,17 +21,28 @@ pub use mix_spin_amp::MixSpinAmp;
 pub use mix_spin_gmax::*;
 pub use mixing_scheme::MixingScheme;
 
-#[derive(Debug, Clone, Copy, Builder, Default, ParamDisplay, Serialize, Deserialize)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    Builder,
+    Default,
+    ParamDisplay,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    PartialOrd,
+)]
 #[builder(setter(into, strip_option), default)]
 pub struct DensityMixingParams {
-    mixing_scheme: Option<MixingScheme>,
-    mix_charge_amp: Option<MixChargeAmp>,
-    mix_spin_amp: Option<MixSpinAmp>,
-    mix_charge_gmax: Option<MixChargeGmax>,
-    mix_spin_gmax: Option<MixSpinGmax>,
-    mix_cut_off_energy: Option<MixCutOffEnergy>,
-    mix_metric_q: Option<MixMetricQ>,
-    mix_history_length: Option<MixHistoryLength>,
+    pub mixing_scheme: Option<MixingScheme>,
+    pub mix_charge_amp: Option<MixChargeAmp>,
+    pub mix_spin_amp: Option<MixSpinAmp>,
+    pub mix_charge_gmax: Option<MixChargeGmax>,
+    pub mix_spin_gmax: Option<MixSpinGmax>,
+    pub mix_cut_off_energy: Option<MixCutOffEnergy>,
+    pub mix_metric_q: Option<MixMetricQ>,
+    pub mix_history_length: Option<MixHistoryLength>,
 }
 
 #[cfg(test)]

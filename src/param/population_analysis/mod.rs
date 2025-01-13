@@ -26,10 +26,10 @@ mod popn_write;
 )]
 #[builder(setter(into, strip_option), default)]
 pub struct PopulationAnalysis {
-    pdos_calculate_weights: Option<PDOSCalculateWeights>,
-    popn_bond_cutoff: Option<PopnBondCutoff>,
-    popn_calculate: Option<PopnCalculate>,
-    popn_write: Option<PopnWrite>,
+    pub pdos_calculate_weights: Option<PDOSCalculateWeights>,
+    pub popn_bond_cutoff: Option<PopnBondCutoff>,
+    pub popn_calculate: Option<PopnCalculate>,
+    pub popn_write: Option<PopnWrite>,
 }
 
 #[cfg(test)]

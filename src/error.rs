@@ -4,6 +4,8 @@ use castep_cell_io::{CellParseError, EnergyCutoffError};
 use glob::{GlobError, PatternError};
 use thiserror::Error;
 
+use crate::param::CastepParamBuilderError;
+
 #[derive(Debug, Error)]
 pub enum SeedingErrors {
     #[error("The glob match pattern has invalid UTF-8 characters")]
@@ -30,4 +32,6 @@ pub enum SeedingErrors {
     DirectoryExist,
     #[error("Error getting cutoff energy: {0}")]
     CutoffEnergy(#[from] EnergyCutoffError),
+    #[error("Error in building castep param")]
+    ParamBuildingError(#[from] CastepParamBuilderError),
 }

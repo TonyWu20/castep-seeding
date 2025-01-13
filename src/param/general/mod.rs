@@ -21,7 +21,7 @@ mod write_checkpoint;
 mod write_props;
 
 pub use backup_setting::BackUpSetting;
-pub use calculate_props::CalculateProperties;
+pub use calculate_props::*;
 pub use castep_task::CastepTask;
 pub use charge_unit::ChargeUnit;
 pub use checkpoint::Checkpoint;
@@ -38,9 +38,22 @@ pub use rand_seed::RandSeed;
 pub use run_time::RunTime;
 pub use stop::Stop;
 pub use write_checkpoint::*;
-pub use write_props::WriteProperties;
+pub use write_props::*;
 
-#[derive(Debug, Clone, Default, Hash, Serialize, Deserialize, Builder, ParamDisplay)]
+#[derive(
+    Debug,
+    Clone,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Default,
+    Hash,
+    Serialize,
+    Deserialize,
+    Builder,
+    ParamDisplay,
+)]
 #[builder(setter(into, strip_option), default)]
 /// Keywords that belong to general category.
 pub struct General {

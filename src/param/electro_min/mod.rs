@@ -1,3 +1,9 @@
+use crate::param::KeywordDisplay;
+use castep_seeding_derive::ParamDisplay;
+
+use derive_builder::Builder;
+use serde::{Deserialize, Serialize};
+
 mod efermi_tol;
 mod elec_convergence_win;
 mod elec_dump_file;
@@ -11,14 +17,11 @@ mod max_scf_cycles;
 mod max_sd_steps;
 mod metals_method;
 mod num_dump_cycles;
+mod num_occ_cycles;
 mod smearing_scheme;
 mod smearing_width;
 mod spin_fix;
 
-use crate::param::KeywordDisplay;
-use castep_seeding_derive::ParamDisplay;
-
-use derive_builder::Builder;
 pub use efermi_tol::*;
 pub use elec_convergence_win::ElecConvergenceWin;
 pub use elec_dump_file::ElecDumpFile;
@@ -32,31 +35,35 @@ pub use max_scf_cycles::MaxScfCycles;
 pub use max_sd_steps::MaxSdSteps;
 pub use metals_method::MetalsMethod;
 pub use num_dump_cycles::NumDumpCycles;
+pub use num_occ_cycles::NumOccCycles;
 pub use smearing_scheme::SmearingScheme;
 pub use smearing_width::SmearingWidth;
 pub use spin_fix::SpinFix;
 
-#[derive(Debug, Clone, ParamDisplay, Builder, Default)]
+#[derive(
+    Debug, Clone, ParamDisplay, Builder, Default, PartialEq, PartialOrd, Serialize, Deserialize,
+)]
 #[builder(setter(into, strip_option), default)]
 pub struct ElectroMinimization {
-    efermi_tol: Option<EFermiTol>,
-    elec_convergence_win: Option<ElecConvergenceWin>,
+    pub efermi_tol: Option<EFermiTol>,
+    pub elec_convergence_win: Option<ElecConvergenceWin>,
     #[param_display(use_ref = true)]
-    elec_dump_file: Option<ElecDumpFile>,
-    elec_eigenvalue_tol: Option<ElecEigenvalueTol>,
-    elec_energy_tol: Option<ElecEnergyTol>,
+    pub elec_dump_file: Option<ElecDumpFile>,
+    pub elec_eigenvalue_tol: Option<ElecEigenvalueTol>,
+    pub elec_energy_tol: Option<ElecEnergyTol>,
     #[param_display(use_ref = true)]
-    elec_restore_file: Option<ElecRestoreFile>,
-    electronic_minimizer: Option<ElectronicMinimizer>,
-    fix_occupancy: Option<FixOccupancy>,
-    max_cg_steps: Option<MaxCgSteps>,
-    max_scf_cycles: Option<MaxScfCycles>,
-    max_sd_steps: Option<MaxSdSteps>,
-    metals_method: Option<MetalsMethod>,
-    num_dump_cycles: Option<NumDumpCycles>,
-    smearing_scheme: Option<SmearingScheme>,
-    smearing_width: Option<SmearingWidth>,
-    spin_fix: Option<SpinFix>,
+    pub elec_restore_file: Option<ElecRestoreFile>,
+    pub electronic_minimizer: Option<ElectronicMinimizer>,
+    pub fix_occupancy: Option<FixOccupancy>,
+    pub max_cg_steps: Option<MaxCgSteps>,
+    pub max_scf_cycles: Option<MaxScfCycles>,
+    pub max_sd_steps: Option<MaxSdSteps>,
+    pub metals_method: Option<MetalsMethod>,
+    pub num_dump_cycles: Option<NumDumpCycles>,
+    pub num_occ_cycles: Option<NumOccCycles>,
+    pub smearing_scheme: Option<SmearingScheme>,
+    pub smearing_width: Option<SmearingWidth>,
+    pub spin_fix: Option<SpinFix>,
 }
 
 #[cfg(test)]

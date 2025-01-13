@@ -3,7 +3,6 @@ use std::fmt::Display;
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-
 /// This keyword determines whether or not to apply a finite basis set correction to energy and stress when cell parameters change.
 /// Available options are:
 /// - 0 - no correction.
@@ -28,9 +27,12 @@ use serde::{Deserialize, Serialize};
 )]
 #[keyword_display(direct_display = false, field = "FINITE_BASIS_CORR")]
 pub enum FiniteBasisCorr {
+    /// 0
     NoCorrection,
+    /// 1
     Manual,
     #[default]
+    /// 2
     Auto,
 }
 

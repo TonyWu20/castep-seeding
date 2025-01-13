@@ -1,11 +1,12 @@
 use std::fmt::Display;
 
+use castep_seeding_derive::KeywordDisplay;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
 use crate::param::KeywordDisplay;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Builder)]
+#[derive(Debug, Clone, Serialize, Deserialize, Builder, PartialEq, PartialOrd)]
 #[builder(setter(into, strip_option), default)]
 pub struct XCDefinition {
     functional_weight: Vec<FunctionalWeight>,
@@ -46,24 +47,42 @@ pub enum FunctionalWeight {
 }
 
 #[derive(
-    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize, Default,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Deserialize,
+    Serialize,
+    Default,
+    KeywordDisplay,
 )]
 #[allow(non_camel_case_types)]
+#[keyword_display(field = "NLXC_SCREENING_FUNCTION", direct_display = false)]
 pub enum NLXC_ScreeningFunction {
     #[default]
     ThomasFermi,
     ErrorFunction,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize, KeywordDisplay,
+)]
 #[allow(non_camel_case_types)]
+#[keyword_display(field = "NLXC_PPD_INT")]
 pub enum NLXC_PPD_Int {
     On,
     Off,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize, KeywordDisplay,
+)]
 #[allow(non_camel_case_types)]
+#[keyword_display(field = "NLXC_DIVERGENCE_CORR")]
 pub enum NLXC_DivergenceCorr {
     On,
     Off,
@@ -145,36 +164,6 @@ impl Default for XCDefinition {
             nlxc_divergence_corr: None,
             nlxc_ppd_int: None,
         }
-    }
-}
-
-impl KeywordDisplay for NLXC_ScreeningFunction {
-    fn field(&self) -> String {
-        "NLXC_SCREENING_FUNCTION".to_string()
-    }
-}
-
-impl Display for NLXC_PPD_Int {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", format!("{:?}", self).to_uppercase())
-    }
-}
-
-impl KeywordDisplay for NLXC_PPD_Int {
-    fn field(&self) -> String {
-        "NLXC_PPD_INT".to_string()
-    }
-}
-
-impl Display for NLXC_DivergenceCorr {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", format!("{:?}", self).to_uppercase())
-    }
-}
-
-impl KeywordDisplay for NLXC_DivergenceCorr {
-    fn field(&self) -> String {
-        "NLXC_DIVERGENCE_CORR".to_string()
     }
 }
 
