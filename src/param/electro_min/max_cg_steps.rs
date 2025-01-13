@@ -15,14 +15,8 @@ use super::ElectronicMinimizer;
 #[derive(
     Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, KeywordDisplay,
 )]
-#[keyword_display(field="MAX_CG_STEPS", from=u32,value=u32)]
+#[keyword_display(field="MAX_CG_STEPS", from=u32,value=u32, default_value=4)]
 pub struct MaxCgSteps(u32);
-
-impl Default for MaxCgSteps {
-    fn default() -> Self {
-        Self(4)
-    }
-}
 
 impl MaxCgSteps {
     pub fn default_value(electronic_minimizer: ElectronicMinimizer) -> Self {

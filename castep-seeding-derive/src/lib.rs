@@ -10,10 +10,17 @@ struct ParamFieldOpt {
     display: Option<Expr>,
 }
 
+#[derive(FromDeriveInput, Default)]
+#[darling(default, attributes(param_display))]
+struct ParamOpt {
+    use_display: Option<bool>,
+}
+
 #[proc_macro_derive(ParamDisplay, attributes(param_display))]
 pub fn derive_param_display(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     let ident = &input.ident;
+    let struct_opts = ParamOpt::from_derive_input(&input).expect("Wrong options");
     let data = if let syn::Data::Struct(data) = &input.data {
         data
     } else {
@@ -30,13 +37,19 @@ pub fn derive_param_display(input: TokenStream) -> TokenStream {
                 self.#name
             },
         };
-        let output_func = match opts.display {
-            Some(e) => quote! {
-                #e
-            },
-            None => quote! {
-                output()
-            },
+        let output_func = if let Some(true) = struct_opts.use_display {
+            quote! {
+                to_string()
+            }
+        } else {
+            match opts.display {
+                Some(e) => quote! {
+                    #e
+                },
+                None => quote! {
+                    output()
+                },
+            }
         };
         quote! {
             #field.map(|v| v.#output_func)
@@ -303,7 +316,7 @@ pub fn derive(input: TokenStream) -> TokenStream {
         } else {
             quote! {"{}"}
         };
-        match input.data {
+        match &input.data {
             syn::Data::Struct(_) => {
                 quote! {
                 impl std::fmt::Display for #ident {
@@ -313,10 +326,30 @@ pub fn derive(input: TokenStream) -> TokenStream {
                 }
                 }
             }
-            syn::Data::Enum(data_enum) => data_enum_display_impl(&data_enum, &ident),
+            syn::Data::Enum(data_enum) => data_enum_display_impl(data_enum, &ident),
             // We don't use union so far
             syn::Data::Union(_) => unimplemented!(),
         }
+    };
+    let default = if let syn::Data::Struct(data_struct) = &input.data {
+        if let syn::Fields::Unnamed(fields) = &data_struct.fields {
+            if let Some(x) = opts.default_value {
+                let values = fields.unnamed.iter().map(|_| quote! {#x});
+                quote! {
+                impl Default for #ident {
+                    fn default() -> #ident {
+                        #ident(#(#values),*)
+                    }
+                }
+                }
+            } else {
+                quote! {}
+            }
+        } else {
+            quote! {}
+        }
+    } else {
+        quote! {}
     };
 
     let output = quote! {
@@ -327,6 +360,7 @@ pub fn derive(input: TokenStream) -> TokenStream {
         #value
         #borrowed_value
         #direct_display
+        #default
     };
     output.into()
 }

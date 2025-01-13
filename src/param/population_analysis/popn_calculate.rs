@@ -10,11 +10,5 @@ use serde::{Deserialize, Serialize};
 #[derive(
     Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, KeywordDisplay,
 )]
-#[keyword_display(field="POPN_CALCULATE", from=bool,value=bool)]
+#[keyword_display(field="POPN_CALCULATE", from=bool,value=bool, default_value=true)]
 pub struct PopnCalculate(bool);
-
-impl Default for PopnCalculate {
-    fn default() -> Self {
-        Self(true)
-    }
-}

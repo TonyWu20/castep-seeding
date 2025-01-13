@@ -15,11 +15,5 @@ use serde::{Deserialize, Serialize};
 #[derive(
     Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Hash, KeywordDisplay,
 )]
-#[keyword_display(field = "SPIN_FIX", from=u32,value=u32)]
+#[keyword_display(field = "SPIN_FIX", from=u32,value=u32,default_value=10)]
 pub struct SpinFix(u32);
-
-impl Default for SpinFix {
-    fn default() -> Self {
-        Self(10)
-    }
-}

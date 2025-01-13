@@ -7,14 +7,8 @@ use serde::{Deserialize, Serialize};
 /// # Example
 /// `FINE_GRID_SCALE : 2.0`
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, KeywordDisplay)]
-#[keyword_display(display_format="{:20.15}", from=f64,value=f64, field="FINE_GRID_SCALE")]
+#[keyword_display(display_format="{:20.15}", from=f64,value=f64, field="FINE_GRID_SCALE", default_value=1.0)]
 pub struct FineGridScale(f64);
-
-impl Default for FineGridScale {
-    fn default() -> Self {
-        Self(1.0)
-    }
-}
 
 #[cfg(test)]
 mod test {

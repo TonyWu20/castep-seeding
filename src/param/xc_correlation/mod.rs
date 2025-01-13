@@ -1,11 +1,6 @@
-use std::fmt::Display;
-
+use castep_seeding_derive::ParamDisplay;
 use derive_builder::Builder;
-use nlxc_options::*;
 use serde::{Deserialize, Serialize};
-use spin_polarised::SpinPolarised;
-use xc_definition::*;
-use xc_functional::XCFunctional;
 
 use super::KeywordDisplay;
 
@@ -14,29 +9,20 @@ mod spin_polarised;
 mod xc_definition;
 mod xc_functional;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Default, Builder)]
+pub use nlxc_options::*;
+pub use spin_polarised::SpinPolarised;
+pub use xc_definition::*;
+pub use xc_functional::XCFunctional;
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, Builder, ParamDisplay)]
 #[builder(setter(into, strip_option), default)]
 pub struct XcParam {
     xc_functional: Option<XCFunctional>,
+    #[param_display(use_ref=true, display=to_string())]
     xc_definition: Option<XCDefinition>,
     spin_polarised: Option<SpinPolarised>,
+    #[param_display(display=to_string())]
     nlxc_options: Option<NLXCOptions>,
-}
-
-impl Display for XcParam {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let output = [
-            self.xc_functional.map(|v| v.output()),
-            self.xc_definition.as_ref().map(|s| s.to_string()),
-            self.spin_polarised.map(|v| v.output()),
-            self.nlxc_options.map(|s| s.to_string()),
-        ]
-        .into_iter()
-        .flatten()
-        .collect::<Vec<String>>()
-        .join("\n");
-        write!(f, "{}", output)
-    }
 }
 
 #[cfg(test)]

@@ -1,7 +1,5 @@
-
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, KeywordDisplay)]
 /// This keyword controls the percentage of extra bands in addition to the number
@@ -13,7 +11,7 @@ use serde::{Deserialize, Serialize};
 #[keyword_display(specified_fields = true)]
 pub enum ExtraBands {
     #[keyword_display(field = "NEXTRA_BANDS")]
-    NextraBands(u64),
+    NextraBands(u32),
     #[keyword_display(field = "PERC_EXTRA_BANDS")]
     PercExtraBands(f64),
 }

@@ -1,4 +1,3 @@
-
 use castep_seeding_derive::ParamDisplay;
 use derive_builder::Builder;
 pub use extra_bands::ExtraBands;
@@ -34,8 +33,6 @@ pub struct BandsOption {
 }
 
 mod nbands {
-    
-    
 
     use castep_seeding_derive::KeywordDisplay;
     use serde::{Deserialize, Serialize};
@@ -57,8 +54,8 @@ mod nbands {
         Deserialize,
         KeywordDisplay,
     )]
-    #[keyword_display(field = "NBANDS", from = u64, value=u64)]
-    pub struct Nbands(u64);
+    #[keyword_display(field = "NBANDS", from = u32, value=u32)]
+    pub struct Nbands(u32);
 
     impl Nbands {
         /// If NEXTRA_BANDS is specified and SPIN_POLARIZED : FALSE:
@@ -86,7 +83,7 @@ mod nbands {
                 let nelectrons = electronic_param
                     .nelectrons
                     .expect("Number of electrons of the system is not determined!");
-                return Self(nelectrons.value() as u64 / 2 + nextra);
+                return Self(nelectrons.value() as u32 / 2 + nextra);
             }
             if let (Some(ExtraBands::NextraBands(nextra)), SpinPolarised::True) =
                 (extra_bands, spin_polarised)
@@ -102,7 +99,7 @@ mod nbands {
                 } else {
                     ndown.value()
                 };
-                return Self(max as u64 + nextra);
+                return Self(max as u32 + nextra);
             }
             todo!()
         }

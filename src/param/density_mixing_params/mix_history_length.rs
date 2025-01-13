@@ -10,11 +10,5 @@ use serde::{Deserialize, Serialize};
 #[derive(
     Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, KeywordDisplay,
 )]
-#[keyword_display(field="MIX_HISTORY_LENGTH", from=u32,value=u32)]
+#[keyword_display(field="MIX_HISTORY_LENGTH", from=u32,value=u32, default_value=7)]
 pub struct MixHistoryLength(u32);
-
-impl Default for MixHistoryLength {
-    fn default() -> Self {
-        Self(7)
-    }
-}
