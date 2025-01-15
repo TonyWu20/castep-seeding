@@ -15,10 +15,6 @@ pub trait SeedFolder {
     fn seed_name(&self) -> &str;
     fn root_dir(&self) -> impl AsRef<Path>;
     fn cell_template(&self) -> &CellDocument;
-    /// Provide potential sources
-    fn potential_src(&self) -> impl AsRef<Path> {
-        self.root_dir()
-    }
     /// Join seed name after the root dir as the seed directory.
     /// You might implement this by yourself to customize the seed directory naming logic.
     fn seed_dir(&self) -> impl AsRef<Path> {
@@ -46,14 +42,13 @@ pub trait SeedFolder {
     ) -> Result<CastepParam, SeedingErrors> {
         builder.build_param_for_task(self.cell_template(), castep_task)
     }
-    /// To use this, required psuedopotential files must be copied to the root dir first.
-    fn soft_link_potentials(&self) -> Result<(), SeedingErrors> {
+    fn soft_link_potentials<P: AsRef<Path>>(&self, potential_src: P) -> Result<(), SeedingErrors> {
         self.cell_template()
             .get_elements()
             .iter()
             .try_for_each(|&elm| {
                 let potential_file = ELEMENT_TABLE.get_by_symbol(elm).potential();
-                let src_path = self.potential_src().as_ref().join(potential_file);
+                let src_path = potential_src.as_ref().join(potential_file);
                 let dst_path = self.seed_dir().as_ref().join(potential_file);
                 if dst_path.is_symlink() || dst_path.exists() {
                     Ok(())
@@ -111,13 +106,14 @@ pub trait SeedFolder {
         Ok(())
     }
     /// One command to do all
-    fn actions(
+    fn actions<P: AsRef<Path>>(
         &self,
         cell_builder: &impl CellBuilding,
         param_builder: &impl ParamBuilding,
+        potential_src: P,
     ) -> Result<(), SeedingErrors> {
         self.create_seed_dir()?;
         self.write_files(cell_builder, param_builder)?;
-        self.soft_link_potentials()
+        self.soft_link_potentials(potential_src)
     }
 }

@@ -80,9 +80,9 @@ pub trait RootJobs {
         param_builder: &P,
         potentials_loc: L,
     ) -> Result<(), SeedingErrors> {
-        self.fetch_potential_files(potentials_loc)?;
+        self.fetch_potential_files(&potentials_loc)?;
         self.generate_seed_folders()?
             .iter()
-            .try_for_each(|seed| seed.actions(cell_builder, param_builder))
+            .try_for_each(|seed| seed.actions(cell_builder, param_builder, &potentials_loc))
     }
 }
