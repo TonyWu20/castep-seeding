@@ -4,8 +4,9 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::{error::SeedingErrors, param::CastepParam, CellBuilding, ParamBuilding};
+use crate::{error::SeedingErrors, CellBuilding, ParamBuilding};
 use castep_cell_io::{cell_document::CellDocument, CastepTask};
+use castep_param_io::param::CastepParam;
 use castep_periodic_table::{data::ELEMENT_TABLE, element::LookupElement};
 
 /// A trait of how to create seed file folders.
@@ -14,6 +15,10 @@ pub trait SeedFolder {
     fn seed_name(&self) -> &str;
     fn root_dir(&self) -> impl AsRef<Path>;
     fn cell_template(&self) -> &CellDocument;
+    /// Provide potential sources
+    fn potential_src(&self) -> impl AsRef<Path> {
+        self.root_dir()
+    }
     /// Join seed name after the root dir as the seed directory.
     /// You might implement this by yourself to customize the seed directory naming logic.
     fn seed_dir(&self) -> impl AsRef<Path> {
@@ -39,7 +44,7 @@ pub trait SeedFolder {
         castep_task: CastepTask,
         builder: &impl ParamBuilding,
     ) -> Result<CastepParam, SeedingErrors> {
-        Ok(builder.build_param_for_task(self.cell_template(), castep_task)?)
+        builder.build_param_for_task(self.cell_template(), castep_task)
     }
     /// To use this, required psuedopotential files must be copied to the root dir first.
     fn soft_link_potentials(&self) -> Result<(), SeedingErrors> {
@@ -48,7 +53,7 @@ pub trait SeedFolder {
             .iter()
             .try_for_each(|&elm| {
                 let potential_file = ELEMENT_TABLE.get_by_symbol(elm).potential();
-                let src_path = self.root_dir().as_ref().join(potential_file);
+                let src_path = self.potential_src().as_ref().join(potential_file);
                 let dst_path = self.seed_dir().as_ref().join(potential_file);
                 if dst_path.is_symlink() || dst_path.exists() {
                     Ok(())

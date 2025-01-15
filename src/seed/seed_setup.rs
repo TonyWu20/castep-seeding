@@ -11,7 +11,8 @@ use castep_periodic_table::data::ELEMENT_TABLE;
 use castep_periodic_table::element::LookupElement;
 use std::path::Path;
 
-use crate::{param::CastepParam, SeedingErrors};
+use crate::SeedingErrors;
+use castep_param_io::param::CastepParam;
 
 pub trait CellBuilding {
     fn geom_opt_cell_template(template_cell: &CellDocument) -> CellDocument {
@@ -102,10 +103,10 @@ pub trait ParamBuilding {
         energy_cutoff: EnergyCutoff,
         use_edft: bool,
         potentials_loc: P,
-    ) -> Result<crate::param::CastepParam, crate::SeedingErrors> {
+    ) -> Result<castep_param_io::param::CastepParam, crate::SeedingErrors> {
         use castep_periodic_table::element::ElementFamily;
 
-        use crate::param::{CastepParam, MetalsMethod, NumOccCycles};
+        use castep_param_io::param::{CastepParam, MetalsMethod, NumOccCycles};
 
         {
             let use_edft = if use_edft {
@@ -139,10 +140,10 @@ pub trait ParamBuilding {
         energy_cutoff: EnergyCutoff,
         use_edft: bool,
         potentials_loc: P,
-    ) -> Result<crate::param::CastepParam, crate::SeedingErrors> {
+    ) -> Result<castep_param_io::param::CastepParam, crate::SeedingErrors> {
         use castep_periodic_table::element::ElementFamily;
 
-        use crate::param::{CastepParam, MetalsMethod, NumOccCycles};
+        use castep_param_io::param::{CastepParam, MetalsMethod, NumOccCycles};
 
         let use_edft = if use_edft {
             template_cell.get_elements().iter().any(|elm| {

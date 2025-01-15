@@ -4,7 +4,7 @@ use castep_cell_io::{CellParseError, EnergyCutoffError};
 use glob::{GlobError, PatternError};
 use thiserror::Error;
 
-use crate::param::CastepParamBuilderError;
+use castep_param_io::param::CastepParamBuilderError;
 
 #[derive(Debug, Error)]
 pub enum SeedingErrors {

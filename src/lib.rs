@@ -1,7 +1,6 @@
 mod auxiliary;
 mod error;
 mod export;
-mod param;
 mod root;
 mod seed;
 
@@ -12,7 +11,7 @@ pub use seed::seed_setup::{CellBuilding, ParamBuilding};
 
 #[cfg(test)]
 mod test {
-    use crate::param::CastepParam;
+    use castep_param_io::param::CastepParam;
     /// Example Usage
     use crate::CellBuilding;
     use crate::ParamBuilding;
