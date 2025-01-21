@@ -1,4 +1,7 @@
-use castep_cell_io::cell_document::CellDocument;
+use castep_cell_io::cell_document::{
+    sections::species_characters::{SpeciesBlock, SpeciesEntry},
+    CellDocument, CellEntries,
+};
 use castep_periodic_table::{
     data::ELEMENT_TABLE,
     element::{ElementSymbol, LookupElement},
@@ -50,11 +53,38 @@ pub trait RootJobs {
         &self,
         potentials_loc: P,
     ) -> Result<(), SeedingErrors> {
-        let elements = self.get_all_elements()?;
-        let copy_element = elements.iter().try_for_each(|element| {
-            let potential_file = ELEMENT_TABLE.get_by_symbol(*element).potential();
-            let potential_path = potentials_loc.as_ref().join(potential_file);
-            let dst_path = self.root_path().as_ref().join(potential_file);
+        let potential_files: HashSet<String> =
+            HashSet::from_iter(self.get_cell_entries()?.iter().flat_map(
+                |cell_doc| -> Vec<String> {
+                    let species_pots = cell_doc.other_entries().and_then(|v| {
+                        v.iter()
+                            .find(|entry| matches!(entry, CellEntries::SpeciesPot(_sp)))
+                            .and_then(|entry| {
+                                if let CellEntries::SpeciesPot(sp) = entry {
+                                    Some(
+                                        sp.items()
+                                            .iter()
+                                            .map(|s| s.item())
+                                            .cloned()
+                                            .collect::<Vec<String>>(),
+                                    )
+                                } else {
+                                    None
+                                }
+                            })
+                    });
+                    species_pots.unwrap_or_else(|| {
+                        self.get_all_elements()
+                            .unwrap()
+                            .iter()
+                            .map(|elm| ELEMENT_TABLE.get_by_symbol(*elm).potential().into())
+                            .collect::<Vec<String>>()
+                    })
+                },
+            ));
+        let copy_potentials = potential_files.iter().try_for_each(|pot_file| {
+            let potential_path = potentials_loc.as_ref().join(pot_file);
+            let dst_path = self.root_path().as_ref().join(pot_file);
             if !dst_path.exists() {
                 let copy =
                     std::fs::copy(potential_path, dst_path).map_err(SeedingErrors::CopyError);
@@ -66,7 +96,7 @@ pub trait RootJobs {
                 ControlFlow::Continue(())
             }
         });
-        match copy_element {
+        match copy_potentials {
             ControlFlow::Continue(_) => Ok(()),
             ControlFlow::Break(e) => Err(e),
         }
