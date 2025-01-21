@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 castep-periodic-table = "0.5.2"
-castep-cell-io = "0.2.14"
+castep-cell-io = "0.2.15"
 castep-param-io = "0.1.2"
 glob = "0.3.1"
 thiserror = "2.0.8"
