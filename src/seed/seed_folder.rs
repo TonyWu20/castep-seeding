@@ -35,8 +35,6 @@ pub trait SeedFolder {
                 let potential_file = ELEMENT_TABLE.get_by_symbol(elm).potential();
                 let src_path = potential_src.as_ref().join(potential_file);
                 let dst_path = self.seed_dir().as_ref().join(potential_file);
-                dbg!(&src_path);
-                dbg!(&dst_path);
                 if dst_path.is_symlink() || dst_path.exists() {
                     Ok(())
                 } else {

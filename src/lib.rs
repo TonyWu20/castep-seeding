@@ -6,16 +6,17 @@ mod seed;
 
 pub use crate::root::RootJobs;
 pub use error::SeedingErrors;
+pub use seed::parse_cell_doc_from_path;
 pub use seed::seed_folder::SeedFolder;
 pub use seed::seed_setup::{CellBuilding, ParamBuilding};
 
 #[cfg(test)]
 mod test {
-    use castep_param_io::param::CastepParam;
     /// Example Usage
     use crate::CellBuilding;
     use crate::ParamBuilding;
     use castep_cell_io::cell_document::{CellDocument, KpointQuality};
+    use castep_param_io::param::CastepParam;
     use std::path::{Path, PathBuf};
 
     use crate::{
