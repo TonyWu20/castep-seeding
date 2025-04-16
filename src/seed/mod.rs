@@ -5,9 +5,7 @@ use castep_cell_io::{cell_document::CellDocument, CellParser};
 
 use crate::error::SeedingErrors;
 
-pub(crate) fn parse_cell_doc_from_path<P: AsRef<Path>>(
-    path: P,
-) -> Result<CellDocument, SeedingErrors> {
+pub fn parse_cell_doc_from_path<P: AsRef<Path>>(path: P) -> Result<CellDocument, SeedingErrors> {
     let cell_content = read_to_string(&path).map_err(SeedingErrors::ReadToString)?;
     CellParser::from(&cell_content)
         .parse()
