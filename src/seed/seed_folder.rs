@@ -1,6 +1,6 @@
 use std::{
     fs::{create_dir, File},
-    io::Write,
+    io::{BufWriter, Write},
     path::{Path, PathBuf},
 };
 
@@ -10,7 +10,7 @@ use castep_periodic_table::{data::ELEMENT_TABLE, element::LookupElement};
 
 /// A trait of how to create seed file folders.
 /// Required psuedopotential files must be copied to the root dir first.
-pub trait SeedFolder {
+pub trait SeedFolder: Send {
     fn seed_name(&self) -> &str;
     fn root_dir(&self) -> impl AsRef<Path>;
     fn cell_template(&self) -> &CellDocument;
@@ -56,8 +56,9 @@ pub trait SeedFolder {
     ) -> Result<(), SeedingErrors> {
         let seed_dir = self.seed_dir();
         let file_path = seed_dir.as_ref().join(filename);
-        let mut file = File::create(file_path).map_err(SeedingErrors::WriteError)?;
-        file.write_all(file_content.as_ref())
+        let file = File::create(file_path).map_err(SeedingErrors::WriteError)?;
+        let mut f = BufWriter::new(file);
+        f.write_all(file_content.as_ref())
             .map_err(SeedingErrors::WriteError)?;
         Ok(())
     }
@@ -68,30 +69,34 @@ pub trait SeedFolder {
         cell_builder: &impl CellBuilding,
         param_builder: &impl ParamBuilding,
     ) -> Result<(), SeedingErrors> {
-        self.create_seed_file(
-            format!("{}.param", self.seed_name()),
-            param_builder
-                .build_param_for_task(self.cell_template(), CastepTask::GeometryOptimization)?
-                .to_string(),
-        )?;
-        self.create_seed_file(
-            format!("{}_DOS.param", self.seed_name()),
-            param_builder
-                .build_param_for_task(self.cell_template(), CastepTask::BandStructure)?
-                .to_string(),
-        )?;
-        self.create_seed_file(
-            format!("{}.cell", self.seed_name()),
-            cell_builder
-                .build_cell_for_task(self.cell_template(), CastepTask::GeometryOptimization)
-                .to_string(),
-        )?;
-        self.create_seed_file(
-            format!("{}_DOS.cell", self.seed_name()),
-            cell_builder
-                .build_cell_for_task(self.cell_template(), CastepTask::BandStructure)
-                .to_string(),
-        )?;
+        [
+            (
+                format!("{}.param", self.seed_name()),
+                param_builder
+                    .build_param_for_task(self.cell_template(), CastepTask::GeometryOptimization)?
+                    .to_string(),
+            ),
+            (
+                format!("{}_DOS.param", self.seed_name()),
+                param_builder
+                    .build_param_for_task(self.cell_template(), CastepTask::BandStructure)?
+                    .to_string(),
+            ),
+            (
+                format!("{}.cell", self.seed_name()),
+                cell_builder
+                    .build_cell_for_task(self.cell_template(), CastepTask::GeometryOptimization)
+                    .to_string(),
+            ),
+            (
+                format!("{}_DOS.cell", self.seed_name()),
+                cell_builder
+                    .build_cell_for_task(self.cell_template(), CastepTask::BandStructure)
+                    .to_string(),
+            ),
+        ]
+        .iter()
+        .try_for_each(|(filename, file_content)| self.create_seed_file(filename, file_content))?;
         Ok(())
     }
     /// One command to do all

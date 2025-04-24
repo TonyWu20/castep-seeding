@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.98"
-castep-cell-io = "0.2.17"
+castep-cell-io = {path = "../../castep-cell-io"}
 castep-param-io = "0.1.2"
 castep-seeding = {path = "../"}
+indicatif = { version = "0.17.11", features = ["rayon"] }
+rayon = "1.10.0"
