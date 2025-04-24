@@ -2,12 +2,9 @@ use castep_cell_io::cell_document::{
     sections::species_characters::{SpeciesBlock, SpeciesEntry},
     CellDocument, CellEntries,
 };
-use castep_periodic_table::{
-    data::ELEMENT_TABLE,
-    element::{ElementSymbol, LookupElement},
-};
+use castep_periodic_table::{data::ELEMENT_TABLE, element::LookupElement};
 use glob::glob;
-use indicatif::{ParallelProgressIterator, ProgressBar, ProgressStyle};
+use indicatif::{ParallelProgressIterator, ProgressStyle};
 use rayon::prelude::*;
 use std::{
     collections::HashSet,
