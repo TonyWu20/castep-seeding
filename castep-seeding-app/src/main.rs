@@ -4,6 +4,10 @@ use castep_param_io::param::CastepParam;
 /// Example Usage
 use castep_seeding::CellBuilding;
 use castep_seeding::ParamBuilding;
+use indicatif::ParallelProgressIterator;
+use indicatif::ProgressBar;
+use indicatif::ProgressStyle;
+use rayon::prelude::*;
 use std::env;
 use std::path::{Path, PathBuf};
 
@@ -38,7 +42,7 @@ impl<P: AsRef<Path>> Seed<P> {
 
 impl<P> SeedFolder for Seed<P>
 where
-    P: AsRef<Path>,
+    P: AsRef<Path> + Send,
 {
     fn seed_name(&self) -> &str {
         self.cell_path
@@ -64,8 +68,17 @@ impl RootJobs for RootFolder {
     }
 
     fn generate_seed_folders(&self) -> Result<Vec<impl SeedFolder>, crate::SeedingErrors> {
+        let bar = ProgressBar::no_length()
+            .with_style(
+                ProgressStyle::with_template(
+                    "[{elapsed_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7} {msg}",
+                )
+                .unwrap(),
+            )
+            .with_message("Creating seed folders");
         self.get_cell_paths()?
-            .into_iter()
+            .into_par_iter()
+            .progress_with(bar)
             .map(Seed::from_cell_path)
             .collect()
     }

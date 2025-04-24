@@ -2,11 +2,10 @@ use castep_cell_io::cell_document::{
     sections::species_characters::{SpeciesBlock, SpeciesEntry},
     CellDocument, CellEntries,
 };
-use castep_periodic_table::{
-    data::ELEMENT_TABLE,
-    element::{ElementSymbol, LookupElement},
-};
+use castep_periodic_table::{data::ELEMENT_TABLE, element::LookupElement};
 use glob::glob;
+use indicatif::{ParallelProgressIterator, ProgressStyle};
+use rayon::prelude::*;
 use std::{
     collections::HashSet,
     ops::ControlFlow,
@@ -35,19 +34,10 @@ pub trait RootJobs {
     }
     fn get_cell_entries(&self) -> Result<Vec<CellDocument>, SeedingErrors> {
         self.get_cell_paths()?
-            .into_iter()
+            .par_iter()
+            .progress_with_style(ProgressStyle::default_bar())
             .map(parse_cell_doc_from_path)
             .collect()
-    }
-    fn get_all_elements(&self) -> Result<HashSet<ElementSymbol>, SeedingErrors> {
-        let entries = self.get_cell_entries()?;
-        let all_elements: HashSet<ElementSymbol> = HashSet::from_iter(
-            entries
-                .iter()
-                .flat_map(|cell_doc| -> Vec<ElementSymbol> { cell_doc.get_elements() })
-                .collect::<Vec<ElementSymbol>>(),
-        );
-        Ok(all_elements)
     }
     fn fetch_potential_files<P: AsRef<Path>>(
         &self,
@@ -74,8 +64,8 @@ pub trait RootJobs {
                             })
                     });
                     species_pots.unwrap_or_else(|| {
-                        self.get_all_elements()
-                            .unwrap()
+                        cell_doc
+                            .get_elements()
                             .iter()
                             .map(|elm| ELEMENT_TABLE.get_by_symbol(*elm).potential().into())
                             .collect::<Vec<String>>()
@@ -104,15 +94,25 @@ pub trait RootJobs {
     /// Implementation of generation of struct that impl `SeedFolder`
     fn generate_seed_folders(&self) -> Result<Vec<impl SeedFolder>, SeedingErrors>;
     /// Execute all actions to build seed files from `.cell` files under the root path.
-    fn build_all<L: AsRef<Path>, C: CellBuilding, P: ParamBuilding>(
+    fn build_all<
+        L: AsRef<Path> + Sync,
+        C: CellBuilding + Sync,
+        P: ParamBuilding + std::marker::Sync,
+    >(
         &self,
         cell_builder: &C,
         param_builder: &P,
         potentials_loc: L,
     ) -> Result<(), SeedingErrors> {
         self.fetch_potential_files(&potentials_loc)?;
-        self.generate_seed_folders()?
-            .iter()
-            .try_for_each(|seed| seed.actions(cell_builder, param_builder, &potentials_loc))
+        self.generate_seed_folders()
+            .unwrap()
+            .into_par_iter()
+            .progress_with_style(ProgressStyle::default_bar())
+            .for_each(|seed| {
+                seed.actions(cell_builder, param_builder, &potentials_loc)
+                    .unwrap()
+            });
+        Ok(())
     }
 }

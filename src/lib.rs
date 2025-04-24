@@ -53,7 +53,7 @@ mod test {
 
     impl<P> SeedFolder for Seed<P>
     where
-        P: AsRef<Path>,
+        P: AsRef<Path> + std::marker::Send,
     {
         fn seed_name(&self) -> &str {
             self.cell_path
