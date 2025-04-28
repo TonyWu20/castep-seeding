@@ -92,7 +92,7 @@ pub trait RootJobs {
         }
     }
     /// Implementation of generation of struct that impl `SeedFolder`
-    fn generate_seed_folders(&self) -> Result<Vec<impl SeedFolder>, SeedingErrors>;
+    fn generate_seed_folders(&self) -> Result<Vec<impl SeedFolder + Sync>, SeedingErrors>;
     /// Execute all actions to build seed files from `.cell` files under the root path.
     fn build_all<
         L: AsRef<Path> + Sync,
@@ -107,12 +107,8 @@ pub trait RootJobs {
         self.fetch_potential_files(&potentials_loc)?;
         self.generate_seed_folders()
             .unwrap()
-            .into_par_iter()
+            .par_iter()
             .progress_with_style(ProgressStyle::default_bar())
-            .for_each(|seed| {
-                seed.actions(cell_builder, param_builder, &potentials_loc)
-                    .unwrap()
-            });
-        Ok(())
+            .try_for_each(|seed| seed.actions(cell_builder, param_builder, &potentials_loc))
     }
 }

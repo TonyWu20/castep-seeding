@@ -10,7 +10,7 @@ use castep_periodic_table::{data::ELEMENT_TABLE, element::LookupElement};
 
 /// A trait of how to create seed file folders.
 /// Required psuedopotential files must be copied to the root dir first.
-pub trait SeedFolder: Send {
+pub trait SeedFolder {
     fn seed_name(&self) -> &str;
     fn root_dir(&self) -> impl AsRef<Path>;
     fn cell_template(&self) -> &CellDocument;

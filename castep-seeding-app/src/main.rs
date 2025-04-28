@@ -25,6 +25,7 @@ impl RootFolder {
     }
 }
 
+#[derive(Debug, Clone)]
 struct Seed<P: AsRef<Path>> {
     cell_path: P,
     cell_doc: CellDocument,
@@ -42,7 +43,7 @@ impl<P: AsRef<Path>> Seed<P> {
 
 impl<P> SeedFolder for Seed<P>
 where
-    P: AsRef<Path> + Send,
+    P: AsRef<Path>,
 {
     fn seed_name(&self) -> &str {
         self.cell_path
