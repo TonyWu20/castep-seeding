@@ -15,7 +15,7 @@ mod test {
     /// Example Usage
     use crate::CellBuilding;
     use crate::ParamBuilding;
-    use castep_cell_io::cell_document::{CellDocument, KpointQuality};
+    use castep_cell_io::cell_document::CellDocument;
     use castep_param_io::param::CastepParam;
     use std::path::{Path, PathBuf};
 
@@ -88,19 +88,13 @@ mod test {
 
     struct Configurator {
         use_edft: bool,
-        kpoint_quality: KpointQuality,
         potentials_loc: PathBuf,
     }
 
     impl Configurator {
-        fn new<P: AsRef<Path>>(
-            use_edft: bool,
-            kpoint_quality: KpointQuality,
-            potentials_loc: P,
-        ) -> Self {
+        fn new<P: AsRef<Path>>(use_edft: bool, potentials_loc: P) -> Self {
             Self {
                 use_edft,
-                kpoint_quality,
                 potentials_loc: potentials_loc.as_ref().into(),
             }
         }
@@ -135,7 +129,7 @@ mod test {
     fn execution() {
         let test_folder = RootFolder::new("test/Bi2Te3_001_Fe_2.2");
         let potentials_loc = "/Users/tonywu/Downloads/Potentials";
-        let config = Configurator::new(true, KpointQuality::Coarse, potentials_loc);
+        let config = Configurator::new(true, potentials_loc);
         match test_folder.build_all(&config, &config, potentials_loc) {
             Ok(()) => {
                 println!("Success")
