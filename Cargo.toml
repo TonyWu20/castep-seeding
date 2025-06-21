@@ -1,6 +1,6 @@
 [package]
 name = "castep-seeding"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 
 [dependencies]
@@ -15,12 +15,12 @@ indicatif = { version = "0.17.11", features = ["rayon"] }
 
 [features]
 default = ["template"]
-template =[]
+template = []
 md = []
 optics = []
 ts_search = []
 phonon = []
 elec_field = []
 nmr = []
-elec_excitations=[]
+elec_excitations = []
 solvation_energy = []
