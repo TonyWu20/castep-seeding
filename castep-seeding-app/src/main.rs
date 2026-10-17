@@ -1,6 +1,6 @@
 use anyhow::Result;
-use castep_cell_io::cell_document::CellDocument;
-use castep_param_io::param::CastepParam;
+use castep_cell_io::CellDocument;
+use castep_seeding::param::CastepParam;
 /// Example Usage
 use castep_seeding::CellBuilding;
 use castep_seeding::ParamBuilding;
@@ -105,21 +105,22 @@ impl ParamBuilding for Configurator {
     fn build_param_for_task(
         &self,
         template_cell: &CellDocument,
-        castep_task: castep_cell_io::CastepTask,
+        castep_task: castep_seeding::CastepTask,
     ) -> Result<CastepParam, SeedingErrors> {
         match castep_task {
-            castep_cell_io::CastepTask::BandStructure => self.dos_param_template(
+            castep_seeding::CastepTask::BandStructure => self.dos_param_template(
                 template_cell,
-                castep_cell_io::EnergyCutoff::Ultrafine,
+                castep_seeding::EnergyCutoff::Ultrafine,
                 self.use_edft,
                 &self.potentials_loc,
             ),
-            castep_cell_io::CastepTask::GeometryOptimization => self.geom_opt_param_template(
+            castep_seeding::CastepTask::GeometryOptimization => self.geom_opt_param_template(
                 template_cell,
-                castep_cell_io::EnergyCutoff::Ultrafine,
+                castep_seeding::EnergyCutoff::Ultrafine,
                 self.use_edft,
                 &self.potentials_loc,
             ),
+            _ => unreachable!("only BandStructure and GeometryOptimization are handled"),
         }
     }
 }

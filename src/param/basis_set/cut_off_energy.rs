@@ -1,7 +1,5 @@
-
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
 
 /// This keyword specifies the cutoff energy for the plane wave basis sets that will be used in the calculation.
 /// If the BASIS_PRECISION is defined, the cutoff energy will be equal to the highest of the cutoff energies associated with the chosen level of accuracy, for the pseudopotentials used in the calculation.

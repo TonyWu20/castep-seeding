@@ -1,7 +1,5 @@
-
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
 
 /// Description
 /// This keyword specifies the total charge of the system. It can be used instead of `NELECTRONS`.

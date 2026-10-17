@@ -1,7 +1,5 @@
-
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
 
 /// This keyword determines whether a fixed number of plane waves (fixed size
 /// basis : TRUE) or a fixed plane wave cutoff energy

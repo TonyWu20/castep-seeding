@@ -1,11 +1,17 @@
 mod auxiliary;
+pub mod cell_doc;
+pub mod cutoff;
 mod error;
 mod export;
+pub mod param;
 mod root;
 mod seed;
 
-pub use crate::root::RootJobs;
+pub use cell_doc::{cell_elements, cell_to_string, total_spin};
+pub use cutoff::{EnergyCutoff, EnergyCutoffError};
 pub use error::SeedingErrors;
+pub use param::{CastepParam, CastepTask};
+pub use root::RootJobs;
 pub use seed::parse_cell_doc_from_path;
 pub use seed::seed_folder::SeedFolder;
 pub use seed::seed_setup::{CellBuilding, ParamBuilding};
@@ -13,16 +19,13 @@ pub use seed::seed_setup::{CellBuilding, ParamBuilding};
 #[cfg(test)]
 mod test {
     /// Example Usage
-    use crate::CellBuilding;
-    use crate::ParamBuilding;
-    use castep_cell_io::cell_document::CellDocument;
-    use castep_param_io::param::CastepParam;
-    use std::path::{Path, PathBuf};
-
     use crate::{
+        param::{CastepParam, CastepTask},
         seed::{parse_cell_doc_from_path, seed_folder::SeedFolder},
-        RootJobs, SeedingErrors,
+        CellBuilding, EnergyCutoff, ParamBuilding, RootJobs, SeedingErrors,
     };
+    use castep_cell_io::CellDocument;
+    use std::path::{Path, PathBuf};
 
     struct RootFolder {
         path: PathBuf,
@@ -106,21 +109,22 @@ mod test {
         fn build_param_for_task(
             &self,
             template_cell: &CellDocument,
-            castep_task: castep_cell_io::CastepTask,
+            castep_task: CastepTask,
         ) -> Result<CastepParam, SeedingErrors> {
             match castep_task {
-                castep_cell_io::CastepTask::BandStructure => self.dos_param_template(
+                CastepTask::BandStructure => self.dos_param_template(
                     template_cell,
-                    castep_cell_io::EnergyCutoff::Ultrafine,
+                    EnergyCutoff::Ultrafine,
                     self.use_edft,
                     &self.potentials_loc,
                 ),
-                castep_cell_io::CastepTask::GeometryOptimization => self.geom_opt_param_template(
+                CastepTask::GeometryOptimization => self.geom_opt_param_template(
                     template_cell,
-                    castep_cell_io::EnergyCutoff::Ultrafine,
+                    EnergyCutoff::Ultrafine,
                     self.use_edft,
                     &self.potentials_loc,
                 ),
+                _ => unreachable!("only BandStructure and GeometryOptimization are handled"),
             }
         }
     }
