@@ -3,7 +3,6 @@ use std::fmt::Display;
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
 
-
 /// This keyword controls whether or not different wavefunctions are used for different spins.
 /// # Default
 /// `FALSE`

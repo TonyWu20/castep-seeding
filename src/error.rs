@@ -1,10 +1,10 @@
 use std::io;
 
-use castep_cell_io::{CellParseError, EnergyCutoffError};
+use castep_cell_fmt::Error as CellParseError;
 use glob::{GlobError, PatternError};
 use thiserror::Error;
 
-use castep_param_io::param::CastepParamBuilderError;
+use crate::{cutoff::EnergyCutoffError, param::CastepParamBuilderError};
 
 #[derive(Debug, Error)]
 pub enum SeedingErrors {

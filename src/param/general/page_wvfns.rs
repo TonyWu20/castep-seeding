@@ -1,7 +1,5 @@
-
 use castep_seeding_derive::KeywordDisplay;
 use serde::{Deserialize, Serialize};
-
 
 ///This keyword controls the paging of wavefunctions to disk in order to save memory. Available options are:
 /// - > 0 - all wavefunctions requiring more memory than this value in megabytes will be paged to disk.

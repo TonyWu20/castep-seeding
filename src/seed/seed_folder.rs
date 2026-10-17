@@ -4,9 +4,15 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::{error::SeedingErrors, CellBuilding, ParamBuilding};
-use castep_cell_io::{cell_document::CellDocument, CastepTask};
+use crate::{
+    cell_doc::{cell_elements, cell_to_string},
+    error::SeedingErrors,
+    CellBuilding, ParamBuilding,
+};
+use castep_cell_io::CellDocument;
 use castep_periodic_table::{data::ELEMENT_TABLE, element::LookupElement};
+
+use crate::CastepTask;
 
 /// A trait of how to create seed file folders.
 /// Required psuedopotential files must be copied to the root dir first.
@@ -28,8 +34,7 @@ pub trait SeedFolder {
         Ok(seed_dir.as_ref().into())
     }
     fn soft_link_potentials<P: AsRef<Path>>(&self, potential_src: P) -> Result<(), SeedingErrors> {
-        self.cell_template()
-            .get_elements()
+        cell_elements(self.cell_template())
             .iter()
             .try_for_each(|&elm| {
                 let potential_file = ELEMENT_TABLE.get_by_symbol(elm).potential();
@@ -84,15 +89,19 @@ pub trait SeedFolder {
             ),
             (
                 format!("{}.cell", self.seed_name()),
-                cell_builder
-                    .build_cell_for_task(self.cell_template(), CastepTask::GeometryOptimization)
-                    .to_string(),
+                cell_to_string(
+                    &cell_builder.build_cell_for_task(
+                        self.cell_template(),
+                        CastepTask::GeometryOptimization,
+                    ),
+                ),
             ),
             (
                 format!("{}_DOS.cell", self.seed_name()),
-                cell_builder
-                    .build_cell_for_task(self.cell_template(), CastepTask::BandStructure)
-                    .to_string(),
+                cell_to_string(
+                    &cell_builder
+                        .build_cell_for_task(self.cell_template(), CastepTask::BandStructure),
+                ),
             ),
         ]
         .iter()
